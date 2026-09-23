@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduTrack AI - Gestão acadêmica inteligente para estudantes">
+    <title>EduTrack AI - Dashboard</title>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- ==========================================================================
+         Fixed Left Sidebar Navigation
+         ========================================================================== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <span class="brand-title">EduTrack</span>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item active" id="nav-dashboard">
+                        <a href="#dashboard">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-disciplinas">
+                        <a href="#disciplinas">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                            <span>Disciplinas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-tarefas">
+                        <a href="#tarefas">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Tarefas</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-quick-info">
+                <div class="avatar-mini">JN</div>
+                <div class="user-quick-details">
+                    <h4>Julia Neves</h4>
+                    <p>Estudante</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==========================================================================
+         Main App Container
+         ========================================================================== -->
+    <div class="app-container">
+        
+        <!-- Main Dashboard Content -->
+        <main class="main-content" id="main-content">
+            
+            <!-- Header Bar -->
+            <header class="header-bar">
+                <div class="welcome-text">
+                    <h1>Olá, Julia! <i class="fa-solid fa-sparkles" style="color: #53dce3; font-size: 1.2rem;"></i></h1>
+                    <p>Mantenha o foco: organizar seus estudos reduz o estresse e melhora seus resultados.</p>
+                </div>
+
+                <div class="header-actions">
+                    <div class="search-box">
+                        <input type="text" id="header-search" placeholder="Pesquisar disciplinas, tarefas..." aria-label="Pesquisar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+
+                    <button class="icon-btn" id="notifications-btn" aria-label="Notificações">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notification-badge"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Mandatory Task Progress Card -->
+            <section class="progress-banner-card">
+                <div class="progress-content">
+                    <div class="progress-header-badge">
+                        <i class="fa-solid fa-trophy"></i> Meta Semanal
+                    </div>
+                    <h2>Progresso Geral de Tarefas</h2>
+                    <p>Você concluiu <strong>14 de 20 tarefas</strong> planejadas para esta semana.</p>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: 70%;"></div>
+                    </div>
+
+                    <div class="progress-stats">
+                        <div class="stat-item completed">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span><strong>14</strong> Concluídas</span>
+                        </div>
+                        <div class="stat-item pending">
+                            <i class="fa-solid fa-clock"></i>
+                            <span><strong>6</strong> Pendentes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radial Progress Indicator Widget -->
+                <div class="progress-circle-widget">
+                    <svg class="circle-svg" viewBox="0 0 90 90">
+                        <defs>
+                            <linearGradient id="cyan-lilac-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#53dce3" />
+                                <stop offset="100%" stop-color="#b19bf1" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="circle-bg" cx="45" cy="45" r="38"></circle>
+                        <circle class="circle-fill" cx="45" cy="45" r="38"></circle>
+                    </svg>
+                    <span class="circle-text">70%</span>
+                </div>
+            </section>
+
+            <!-- Overview Metric Cards Grid -->
+            <section class="metrics-grid">
+                <article class="metric-card">
+                    <div class="metric-icon cyan">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Disciplinas</h3>
+                        <div class="metric-value">6</div>
+                        <div class="metric-subtext">Ativas no semestre</div>
+                    </div>
+                </article>
+
+                <article class="metric-card">
+                    <div class="metric-icon lilac">
+                        <i class="fa-solid fa-list-ul"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Tarefas Pendentes</h3>
+                        <div class="metric-value">6</div>
+                        <div class="metric-subtext">2 com prazo próximo</div>
+                    </div>
+                </article>
+
+                <article class="metric-card">
+                    <div class="metric-icon cyan">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <div class="metric-info">
+                        <h3>Tempo Estimado</h3>
+                        <div class="metric-value">14,5h</div>
+                        <div class="metric-subtext">Estudo semanal total</div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Vertical Bar Chart Section -->
+            <section class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <h3>Tempo de Estudo por Disciplina</h3>
+                        <p>Horas estimadas com base nas tarefas cadastradas</p>
+                    </div>
+                    <div class="chart-badge">
+                        <i class="fa-solid fa-chart-simple"></i> Dados Semanais
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <!-- Bar 1: Cálculo II -->
+                    <div class="chart-bar-group">
+                        <div class="bar-wrapper">
+                            <span class="bar-tooltip">5.5h</span>
+                            <div class="bar-fill cyan" style="height: 90%;"></div>
+                        </div>
+                        <span class="bar-label">Cálculo II</span>
+                    </div>
+
+                    <!-- Bar 2: Algoritmos -->
+                    <div class="chart-bar-group">
+                        <div class="bar-wrapper">
+                            <span class="bar-tooltip">4.0h</span>
+                            <div class="bar-fill lilac" style="height: 68%;"></div>
+                        </div>
+                        <span class="bar-label">Algoritmos</span>
+                    </div>
+
+                    <!-- Bar 3: Banco de Dados -->
+                    <div class="chart-bar-group">
+                        <div class="bar-wrapper">
+                            <span class="bar-tooltip">3.2h</span>
+                            <div class="bar-fill cyan" style="height: 52%;"></div>
+                        </div>
+                        <span class="bar-label">Banco Dados</span>
+                    </div>
+
+                    <!-- Bar 4: Eng. Software -->
+                    <div class="chart-bar-group">
+                        <div class="bar-wrapper">
+                            <span class="bar-tooltip">2.8h</span>
+                            <div class="bar-fill lilac" style="height: 45%;"></div>
+                        </div>
+                        <span class="bar-label">Eng. Software</span>
+                    </div>
+
+                    <!-- Bar 5: Redes -->
+                    <div class="chart-bar-group">
+                        <div class="bar-wrapper">
+                            <span class="bar-tooltip">1.5h</span>
+                            <div class="bar-fill cyan" style="height: 25%;"></div>
+                        </div>
+                        <span class="bar-label">Redes</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ==========================================================================
+             Right Side User Panel
+             ========================================================================== -->
+        <aside class="right-panel">
+            
+            <!-- User Profile Card -->
+            <div class="profile-card">
+                <div class="profile-avatar-container">
+                    <div class="profile-avatar">
+                        <div class="avatar-img">JN</div>
+                    </div>
+                    <div class="streak-tag">
+                        <i class="fa-solid fa-fire"></i> 5 dias seguidos
+                    </div>
+                </div>
+
+                <h3>Julia Neves</h3>
+                <p>Engenharia de Software • 4º Semestre</p>
+            </div>
+
+            <!-- Upcoming Tasks Panel (Próximas Tarefas) -->
+            <div class="tasks-panel">
+                <div class="section-header">
+                    <h3>Próximas tarefas</h3>
+                    <a href="#tarefas">Ver todas</a>
+                </div>
+
+                <div class="upcoming-tasks-list">
+                    
+                    <!-- Task Item 1 -->
+                    <article class="task-item-card">
+                        <i class="fa-regular fa-square task-status-icon"></i>
+                        <div class="task-details">
+                            <h4 class="task-title">Trabalho de Cálculo II</h4>
+                            <div class="task-meta">
+                                <span class="task-date"><i class="fa-regular fa-calendar"></i> Amanhã, 23:59</span>
+                                <span class="task-tag urgent">Cálculo</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Task Item 2 -->
+                    <article class="task-item-card">
+                        <i class="fa-regular fa-square task-status-icon"></i>
+                        <div class="task-details">
+                            <h4 class="task-title">Relatório de Banco de Dados</h4>
+                            <div class="task-meta">
+                                <span class="task-date"><i class="fa-regular fa-calendar"></i> 25/09, 18:00</span>
+                                <span class="task-tag cyan">BD</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Task Item 3 -->
+                    <article class="task-item-card">
+                        <i class="fa-regular fa-square task-status-icon"></i>
+                        <div class="task-details">
+                            <h4 class="task-title">Exercícios de Algoritmos</h4>
+                            <div class="task-meta">
+                                <span class="task-date"><i class="fa-regular fa-calendar"></i> 27/09, 23:59</span>
+                                <span class="task-tag lilac">Algoritmos</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Task Item 4 -->
+                    <article class="task-item-card">
+                        <i class="fa-regular fa-square task-status-icon"></i>
+                        <div class="task-details">
+                            <h4 class="task-title">Quiz de Eng. de Software</h4>
+                            <div class="task-meta">
+                                <span class="task-date"><i class="fa-regular fa-calendar"></i> 29/09, 12:00</span>
+                                <span class="task-tag cyan">Eng. SW</span>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- JavaScript Interactions -->
+    <script src="js/app.js"></script>
+</body>
+</html>
