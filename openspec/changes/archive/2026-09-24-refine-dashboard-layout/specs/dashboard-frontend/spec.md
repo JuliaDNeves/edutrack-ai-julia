@@ -1,9 +1,9 @@
 # dashboard-frontend Specification
 
 ## Purpose
-Define front-end user interface structure, navigation, overview metrics, and study tracking visual components for the EduTrack web application.
+Refine dashboard visual layout, separate page structure into dedicated HTML files, introduce mobile bottom navigation bar, remove notification icon and streak metrics, and standardize study metric phrasing to neutral non-weekly terms.
 
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Navigation Bar and Page Structure
 The system SHALL provide navigation linking `dashboard.html`, `disciplinas.html`, and `tarefas.html`. On desktop viewports, navigation SHALL render as a fixed left sidebar. On mobile viewports, navigation SHALL render as a fixed bottom navigation bar showing only icons with active item highlighting.
@@ -51,6 +51,8 @@ The system SHALL render a right side panel containing student profile info witho
 - **WHEN** the user views the right side panel
 - **THEN** the system displays student profile details without "5 dias seguidos" or flame streak badges
 
+## ADDED Requirements
+
 ### Requirement: Visual Account Switcher Action
 The system SHALL display a visual account/logout action on desktop profile hover and an adapted mobile profile trigger without requiring authentication backend logic.
 
@@ -61,10 +63,3 @@ The system SHALL display a visual account/logout action on desktop profile hover
 #### Scenario: Mobile visual account trigger
 - **WHEN** the user interacts with the profile element on mobile screens
 - **THEN** the system presents the account action cleanly without requiring hover states
-
-### Requirement: Dark Mode Theme and Iconography
-The system SHALL apply dark mode styling with background near `#090d16`, cyan (`#53dce3`) and lilac (`#b19bf1`) accents, rounded card containers, subtle shadow glows, and Font Awesome iconography.
-
-#### Scenario: Apply visual design tokens
-- **WHEN** interface components render
-- **THEN** the system uses dark mode colors, cyan/lilac accent highlights, rounded cards, and Font Awesome icons

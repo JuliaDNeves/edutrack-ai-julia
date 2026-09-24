@@ -3,11 +3,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Sidebar Navigation Switcher Visual Feedback
+    // 1. Sidebar / Bottom Navbar Item Active State
     const navItems = document.querySelectorAll('.nav-item');
 
     navItems.forEach(item => {
-        item.addEventListener('click', (e) => {
+        item.addEventListener('click', () => {
             navItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
         });
@@ -40,15 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3. Notification Button Click Visual Effect
-    const notificationBtn = document.getElementById('notifications-btn');
-    const notificationBadge = document.querySelector('.notification-badge');
+    // 3. User Quick Profile Touch / Click Visual Toggle
+    const sidebarUserProfile = document.getElementById('sidebar-user-profile');
+    if (sidebarUserProfile) {
+        sidebarUserProfile.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebarUserProfile.classList.toggle('active-account-toggle');
+        });
 
-    if (notificationBtn) {
-        notificationBtn.addEventListener('click', () => {
-            if (notificationBadge) {
-                notificationBadge.style.display = notificationBadge.style.display === 'none' ? 'block' : 'none';
-            }
+        document.addEventListener('click', () => {
+            sidebarUserProfile.classList.remove('active-account-toggle');
         });
     }
 });
