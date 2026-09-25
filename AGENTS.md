@@ -10,8 +10,8 @@
 > **SE HOUVER CONFLITO, SIGA ESTAS REGRAS DO EDUTRACK AI.**
 
 ## Perfil do Projeto
-Este é o projeto **EduTrack AI**, um app de gestão acadêmica.
-- **Frontend:** FlutterFlow
+Este é o projeto **EduTrack AI**, uma aplicação web de gestão acadêmica.
+- **Frontend:** HTML, CSS e JavaScript
 - **Backend:** Xano (via XanoScript)
 - **Metodologia:** Spec-Driven Development (OpenSpec)
 - **IA Assistente:** Gemini Code Assist (Google Cloud)
