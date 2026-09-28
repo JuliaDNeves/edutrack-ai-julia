@@ -7,7 +7,7 @@ query "cliente/{cliente_id}" verb=DELETE {
   }
 
   stack {
-    db.del cliente {
+    db.del "" {
       field_name = "id"
       field_value = $input.cliente_id
     }

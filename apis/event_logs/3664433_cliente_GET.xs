@@ -6,7 +6,7 @@ query cliente verb=GET {
   }
 
   stack {
-    db.query cliente {
+    db.query "" {
       return = {type: "list"}
     } as $cliente
   }

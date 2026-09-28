@@ -4,12 +4,12 @@ query cliente verb=POST {
 
   input {
     dblink {
-      table = "cliente"
+      table = ""
     }
   }
 
   stack {
-    db.add cliente {
+    db.add "" {
       enforce_hidden_fields = false
       data = {created_at: "now"}
     } as $cliente

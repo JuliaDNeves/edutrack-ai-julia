@@ -7,7 +7,7 @@ query "cliente/{cliente_id}" verb=GET {
   }
 
   stack {
-    db.get cliente {
+    db.get "" {
       field_name = "id"
       field_value = $input.cliente_id
     } as $cliente

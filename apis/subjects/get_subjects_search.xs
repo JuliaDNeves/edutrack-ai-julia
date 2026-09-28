@@ -21,7 +21,7 @@ query subjects_search verb=GET {
     }
   
     // Check each subject
-    foreach ($subjects.items) {
+    foreach ($subjects) {
       each as $subject {
         // Check if subject name matches search
         var $name_matches {
