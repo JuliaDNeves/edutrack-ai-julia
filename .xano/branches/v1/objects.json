@@ -218,7 +218,7 @@
   {
     "id": 434822,
     "path": "apis/subjects/api_group.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_group",
     "staged": false,
     "sha256": "37d1c36fdb2299fc21fb6cf6089257604afdf39aa126bc436e5180589f66bb23",
@@ -227,7 +227,7 @@
   {
     "id": 4072247,
     "path": "apis/subjects/post_subjects.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_endpoint",
     "staged": false,
     "sha256": "3b0d52df381aaa4e0a0118d1e3989201f3e0922536c1937c87bc75c8c95cb132",
@@ -236,7 +236,7 @@
   {
     "id": 4072248,
     "path": "apis/subjects/get_subjects.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_endpoint",
     "staged": false,
     "sha256": "d0e67c861c4227dd0e205e8185e38b99f5da10ef751dc5ee55750eaf2ed8a2ad",
@@ -245,7 +245,7 @@
   {
     "id": 4072249,
     "path": "apis/subjects/patch_subjects_id.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_endpoint",
     "staged": false,
     "sha256": "c11331b9e00816a07590f3066f7e0b47a8c34bfe1a7b332b3e84cc897227769f",
@@ -254,7 +254,7 @@
   {
     "id": 4072250,
     "path": "apis/subjects/delete_subjects_id.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_endpoint",
     "staged": false,
     "sha256": "1211c198cfdfef3d90f8e64a4383139029e29b56adcff2141aed89a9db448011",
