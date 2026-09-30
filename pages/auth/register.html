@@ -28,7 +28,7 @@
                 <p>Junte-se ao EduTrack para organizar sua rotina acadêmica</p>
             </div>
 
-            <form class="auth-form" id="form-register" action="login.html" method="GET">
+            <form class="auth-form" id="form-register">
                 <div class="auth-input-group">
                     <label for="register-email">E-mail</label>
                     <div class="input-wrapper">
@@ -53,6 +53,11 @@
                     </div>
                 </div>
 
+                <div class="auth-alert-error" id="register-feedback" style="display: none;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="register-feedback-text"></span>
+                </div>
+
                 <button type="submit" class="auth-btn-primary full-width" id="btn-submit-register">
                     <i class="fa-solid fa-user-plus"></i> Criar conta
                 </button>
@@ -69,6 +74,7 @@
     </div>
 
     <!-- JavaScript Interactions -->
+    <script src="../../js/auth.js"></script>
     <script src="../../js/app.js"></script>
 </body>
 </html>

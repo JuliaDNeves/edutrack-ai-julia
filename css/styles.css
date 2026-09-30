@@ -1548,6 +1548,20 @@ body.auth-body {
     animation: fadeInView 0.3s ease-in-out;
 }
 
+.auth-alert-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 99, 132, 0.12);
+    border: 1px solid rgba(255, 99, 132, 0.35);
+    color: #ff6b81;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    animation: fadeInView 0.3s ease-in-out;
+}
+
 /* Responsive Media Queries for Auth Template */
 @media (max-width: 900px) {
     .landing-hero-container {

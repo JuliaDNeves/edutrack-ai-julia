@@ -53,19 +53,19 @@
         </div>
 
         <div class="sidebar-footer">
-            <a href="auth/login.html" class="user-quick-info" id="sidebar-user-profile" aria-label="Opções de conta" style="text-decoration:none;">
+            <div class="user-quick-info" id="sidebar-user-profile" aria-label="Opções de conta">
                 <div class="user-profile-default">
-                    <div class="avatar-mini">JN</div>
+                    <div class="avatar-mini" id="user-avatar-mini">--</div>
                     <div class="user-quick-details">
-                        <h4>Julia Neves</h4>
-                        <p>Estudante</p>
+                        <h4 id="user-name-sidebar">Carregando...</h4>
+                        <p id="user-email-sidebar">Estudante</p>
                     </div>
                 </div>
-                <div class="user-account-action">
+                <div class="user-account-action" id="btn-logout" title="Sair da conta" style="cursor: pointer;">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Trocar conta</span>
+                    <span>Sair</span>
                 </div>
-            </a>
+            </div>
         </div>
     </aside>
 
@@ -80,7 +80,7 @@
             <!-- Header Bar -->
             <header class="header-bar">
                 <div class="welcome-text">
-                    <h1>Olá, Julia! <i class="fa-solid fa-sparkles" style="color: #53dce3; font-size: 1.2rem;"></i></h1>
+                    <h1 id="welcome-user-heading">Olá! <i class="fa-solid fa-sparkles" style="color: #53dce3; font-size: 1.2rem;"></i></h1>
                     <p>Mantenha o foco: organizar seus estudos reduz o estresse e melhora seus resultados.</p>
                 </div>
 
@@ -240,12 +240,12 @@
             <div class="profile-card">
                 <div class="profile-avatar-container">
                     <div class="profile-avatar">
-                        <div class="avatar-img">JN</div>
+                        <div class="avatar-img" id="user-avatar-large">--</div>
                     </div>
                 </div>
 
-                <h3>Julia Neves</h3>
-                <p>Engenharia de Software • 4º Semestre</p>
+                <h3 id="user-name-panel">Carregando...</h3>
+                <p id="user-role-panel">Estudante</p>
             </div>
 
             <!-- Upcoming Tasks Panel (Próximas Tarefas) -->
@@ -313,6 +313,7 @@
     </div>
 
     <!-- JavaScript Interactions -->
+    <script src="../js/auth.js"></script>
     <script src="../js/app.js"></script>
 </body>
 </html>
