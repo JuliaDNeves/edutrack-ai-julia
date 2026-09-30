@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (formRegister && typeof EduTrackAuth !== 'undefined') {
         formRegister.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const nameInput = document.getElementById('register-name');
             const emailInput = document.getElementById('register-email');
             const passwordInput = document.getElementById('register-password');
             const confirmPasswordInput = document.getElementById('register-confirm-password');
@@ -113,6 +114,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             const feedbackText = document.getElementById('register-feedback-text');
 
             if (feedbackAlert) feedbackAlert.style.display = 'none';
+
+            const nameValue = nameInput ? nameInput.value.trim() : '';
+            if (!nameValue) {
+                if (feedbackText && feedbackAlert) {
+                    feedbackText.textContent = 'Por favor, informe seu nome.';
+                    feedbackAlert.style.display = 'flex';
+                }
+                return;
+            }
 
             if (passwordInput.value !== confirmPasswordInput.value) {
                 if (feedbackText && feedbackAlert) {
@@ -128,7 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             try {
-                await EduTrackAuth.signup(emailInput.value.trim(), passwordInput.value);
+                await EduTrackAuth.signup(emailInput.value.trim(), passwordInput.value, nameValue);
                 window.location.href = getDashboardUrl();
             } catch (err) {
                 if (feedbackText && feedbackAlert) {

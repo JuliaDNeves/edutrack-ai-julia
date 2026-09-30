@@ -30,7 +30,7 @@
     "id": 3695948,
     "type": "api_endpoint",
     "path": "apis/event_logs/3695948_cliente_cliente_id_PUT.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "267ec38642487a0abfad6f39ef033d8ce9f5ffa8ae7428912bb6436832eb49c6",
     "original": "Ly8gVXBkYXRlIGNsaWVudGUgcmVjb3JkCnF1ZXJ5ICJjbGllbnRlL3tjbGllbnRlX2lkfSIgdmVyYj1QVVQgewogIGFwaV9ncm91cCA9ICJFdmVudCBMb2dzIgoKICBpbnB1dCB7CiAgICBpbnQgY2xpZW50ZV9pZD8gZmlsdGVycz1taW46MQogICAgZGJsaW5rIHsKICAgICAgdGFibGUgPSAiIgogICAgfQogIH0KCiAgc3RhY2sgewogICAgZGIuZWRpdCAiIiB7CiAgICAgIGZpZWxkX25hbWUgPSAiaWQiCiAgICAgIGZpZWxkX3ZhbHVlID0gJGlucHV0LmNsaWVudGVfaWQKICAgICAgZW5mb3JjZV9oaWRkZW5fZmllbGRzID0gZmFsc2UKICAgICAgZGF0YSA9IHtub21lOiAkaW5wdXQubm9tZX0KICAgIH0gYXMgJG1vZGVsCiAgfQoKICByZXNwb25zZSA9ICRtb2RlbAp9"
@@ -39,7 +39,7 @@
     "id": 3664433,
     "type": "api_endpoint",
     "path": "apis/event_logs/3664433_cliente_GET.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "cfa7b35c7fa1eac80860917d365439bd365a24b0dced1bdad1bbcd8f41a345be",
     "original": "Ly8gUXVlcnkgYWxsIGNsaWVudGUgcmVjb3JkcwpxdWVyeSBjbGllbnRlIHZlcmI9R0VUIHsKICBhcGlfZ3JvdXAgPSAiRXZlbnQgTG9ncyIKCiAgaW5wdXQgewogIH0KCiAgc3RhY2sgewogICAgZGIucXVlcnkgIiIgewogICAgICByZXR1cm4gPSB7dHlwZTogImxpc3QifQogICAgfSBhcyAkY2xpZW50ZQogIH0KCiAgcmVzcG9uc2UgPSAkY2xpZW50ZQp9"
@@ -48,7 +48,7 @@
     "id": 3664434,
     "type": "api_endpoint",
     "path": "apis/event_logs/3664434_cliente_POST.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "4596a35bc1191ca9cab53472765ca7b123764e09ef45b238bd5058e55d48dbaf",
     "original": "Ly8gQWRkIGNsaWVudGUgcmVjb3JkCnF1ZXJ5IGNsaWVudGUgdmVyYj1QT1NUIHsKICBhcGlfZ3JvdXAgPSAiRXZlbnQgTG9ncyIKCiAgaW5wdXQgewogICAgZGJsaW5rIHsKICAgICAgdGFibGUgPSAiIgogICAgfQogIH0KCiAgc3RhY2sgewogICAgZGIuYWRkICIiIHsKICAgICAgZW5mb3JjZV9oaWRkZW5fZmllbGRzID0gZmFsc2UKICAgICAgZGF0YSA9IHtjcmVhdGVkX2F0OiAibm93In0KICAgIH0gYXMgJGNsaWVudGUKICB9CgogIHJlc3BvbnNlID0gJGNsaWVudGUKfQ=="
@@ -57,7 +57,7 @@
     "id": 3664435,
     "type": "api_endpoint",
     "path": "apis/event_logs/3664435_cliente_cliente_id_PATCH.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "36405389e701352b8c4405ede0483fe974ab89d754edfbae63c96edf6f3094ba",
     "original": "Ly8gRWRpdCBjbGllbnRlIHJlY29yZApxdWVyeSAiY2xpZW50ZS97Y2xpZW50ZV9pZH0iIHZlcmI9UEFUQ0ggewogIGFwaV9ncm91cCA9ICJFdmVudCBMb2dzIgoKICBpbnB1dCB7CiAgICBpbnQgY2xpZW50ZV9pZD8gZmlsdGVycz1taW46MQogICAgZGJsaW5rIHsKICAgICAgdGFibGUgPSAiIgogICAgfQogIH0KCiAgc3RhY2sgewogICAgdXRpbC5nZXRfcmF3X2lucHV0IHsKICAgICAgZW5jb2RpbmcgPSAianNvbiIKICAgICAgZXhjbHVkZV9taWRkbGV3YXJlID0gZmFsc2UKICAgIH0gYXMgJHJhd19pbnB1dAogIAogICAgZGIucGF0Y2ggIiIgewogICAgICBmaWVsZF9uYW1lID0gImlkIgogICAgICBmaWVsZF92YWx1ZSA9ICRpbnB1dC5jbGllbnRlX2lkCiAgICAgIGRhdGEgPSBgJGlucHV0fHBpY2s6KCRyYXdfaW5wdXR8a2V5cylgfGZpbHRlcl9udWxsfGZpbHRlcl9lbXB0eV90ZXh0CiAgICB9IGFzICRjbGllbnRlCiAgfQoKICByZXNwb25zZSA9ICRjbGllbnRlCn0="
@@ -66,7 +66,7 @@
     "id": 3664431,
     "type": "api_endpoint",
     "path": "apis/event_logs/3664431_cliente_cliente_id_DELETE.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "aba4895b2c2dc2f5ae8ff4311fd814b22bf2870ecf066e71a65965ba6cbf6073",
     "original": "Ly8gRGVsZXRlIGNsaWVudGUgcmVjb3JkLgpxdWVyeSAiY2xpZW50ZS97Y2xpZW50ZV9pZH0iIHZlcmI9REVMRVRFIHsKICBhcGlfZ3JvdXAgPSAiRXZlbnQgTG9ncyIKCiAgaW5wdXQgewogICAgaW50IGNsaWVudGVfaWQ/IGZpbHRlcnM9bWluOjEKICB9CgogIHN0YWNrIHsKICAgIGRiLmRlbCAiIiB7CiAgICAgIGZpZWxkX25hbWUgPSAiaWQiCiAgICAgIGZpZWxkX3ZhbHVlID0gJGlucHV0LmNsaWVudGVfaWQKICAgIH0KICB9CgogIHJlc3BvbnNlID0gbnVsbAp9"
@@ -75,7 +75,7 @@
     "id": 3664432,
     "type": "api_endpoint",
     "path": "apis/event_logs/3664432_cliente_cliente_id_GET.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "d59ed1a58ba0b90ac96124443d302b7e5e8357b4e85ac30cfbd678f3f734acec",
     "original": "Ly8gR2V0IGNsaWVudGUgcmVjb3JkCnF1ZXJ5ICJjbGllbnRlL3tjbGllbnRlX2lkfSIgdmVyYj1HRVQgewogIGFwaV9ncm91cCA9ICJFdmVudCBMb2dzIgoKICBpbnB1dCB7CiAgICBpbnQgY2xpZW50ZV9pZD8gZmlsdGVycz1taW46MQogIH0KCiAgc3RhY2sgewogICAgZGIuZ2V0ICIiIHsKICAgICAgZmllbGRfbmFtZSA9ICJpZCIKICAgICAgZmllbGRfdmFsdWUgPSAkaW5wdXQuY2xpZW50ZV9pZAogICAgfSBhcyAkY2xpZW50ZQogIAogICAgcHJlY29uZGl0aW9uICgkY2xpZW50ZSAhPSBudWxsKSB7CiAgICAgIGVycm9yX3R5cGUgPSAibm90Zm91bmQiCiAgICAgIGVycm9yID0gIk5vdCBGb3VuZC4iCiAgICB9CiAgfQoKICByZXNwb25zZSA9ICRjbGllbnRlCn0="
@@ -263,7 +263,7 @@
   {
     "id": 4074371,
     "path": "apis/subjects/get_subjects_search.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_endpoint",
     "staged": false,
     "sha256": "9f41e2360f6064eb130b3624ce37783b68e1bf7f705107bba294d1b42d6d078d",
@@ -273,7 +273,7 @@
     "id": 4074494,
     "type": "api_endpoint",
     "path": "apis/authentication/4074494_auth_signup_POST.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "a3256b3f1a988b82b898703c529800228d4bd67e866f439d42398de2bae67882",
     "original": "Ly8gU2lnbnVwIGFuZCByZXRyaWV2ZSBhbiBhdXRoZW50aWNhdGlvbiB0b2tlbgpxdWVyeSAiYXV0aC9zaWdudXAiIHZlcmI9UE9TVCB7CiAgYXBpX2dyb3VwID0gIkF1dGhlbnRpY2F0aW9uIgoKICBpbnB1dCB7CiAgICB0ZXh0IG5hbWU/CiAgICBlbWFpbCBlbWFpbD8gZmlsdGVycz1sb3dlcnx0cmltCiAgICBwYXNzd29yZCBwYXNzd29yZD8KICB9CgogIHN0YWNrIHsKICAgIGRiLmdldCB1c2VyIHsKICAgICAgZmllbGRfbmFtZSA9ICJlbWFpbCIKICAgICAgZmllbGRfdmFsdWUgPSAkaW5wdXQuZW1haWwKICAgIH0gYXMgJHVzZXIKICAKICAgIHByZWNvbmRpdGlvbiAoJHVzZXIgPT0gbnVsbCkgewogICAgICBlcnJvcl90eXBlID0gImFjY2Vzc2RlbmllZCIKICAgICAgZXJyb3IgPSAiVGhpcyBhY2NvdW50IGlzIGFscmVhZHkgaW4gdXNlLiIKICAgIH0KICAKICAgIGRiLmFkZCB1c2VyIHsKICAgICAgZW5mb3JjZV9oaWRkZW5fZmllbGRzID0gZmFsc2UKICAgICAgZGF0YSA9IHsKICAgICAgICBjcmVhdGVkX2F0OiAibm93IgogICAgICAgIG5hbWUgICAgICA6ICRpbnB1dC5uYW1lCiAgICAgICAgZW1haWwgICAgIDogJGlucHV0LmVtYWlsCiAgICAgICAgcGFzc3dvcmQgIDogJGlucHV0LnBhc3N3b3JkCiAgICAgIH0KICAgIH0gYXMgJHVzZXIKICAKICAgIHNlY3VyaXR5LmNyZWF0ZV9hdXRoX3Rva2VuIHsKICAgICAgdGFibGUgPSAidXNlciIKICAgICAgZXh0cmFzID0ge30KICAgICAgZXhwaXJhdGlvbiA9IDg2NDAwCiAgICAgIGlkID0gJHVzZXIuaWQKICAgIH0gYXMgJGF1dGhUb2tlbgogIH0KCiAgcmVzcG9uc2UgPSB7YXV0aFRva2VuOiAkYXV0aFRva2VufQp9"
@@ -282,7 +282,7 @@
     "id": 4074483,
     "type": "api_endpoint",
     "path": "apis/authentication/4074483_auth_login_POST.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "d72f6f9cd02f3a92eaf27c89f53ec40e1d6c386d35973850bb69a97e2ed611cc",
     "original": "Ly8gTG9naW4gYW5kIHJldHJpZXZlIGFuIGF1dGhlbnRpY2F0aW9uIHRva2VuCnF1ZXJ5ICJhdXRoL2xvZ2luIiB2ZXJiPVBPU1QgewogIGFwaV9ncm91cCA9ICJBdXRoZW50aWNhdGlvbiIKCiAgaW5wdXQgewogICAgZW1haWwgZW1haWw/IGZpbHRlcnM9dHJpbXxsb3dlcgogICAgdGV4dCBwYXNzd29yZD8KICB9CgogIHN0YWNrIHsKICAgIGRiLmdldCB1c2VyIHsKICAgICAgZmllbGRfbmFtZSA9ICJlbWFpbCIKICAgICAgZmllbGRfdmFsdWUgPSAkaW5wdXQuZW1haWwKICAgICAgb3V0cHV0ID0gWyJpZCIsICJjcmVhdGVkX2F0IiwgIm5hbWUiLCAiZW1haWwiLCAicGFzc3dvcmQiXQogICAgfSBhcyAkdXNlcgogIAogICAgcHJlY29uZGl0aW9uICgkdXNlciAhPSBudWxsKSB7CiAgICAgIGVycm9yID0gIkludmFsaWQgQ3JlZGVudGlhbHMuIgogICAgfQogIAogICAgc2VjdXJpdHkuY2hlY2tfcGFzc3dvcmQgewogICAgICB0ZXh0X3Bhc3N3b3JkID0gJGlucHV0LnBhc3N3b3JkCiAgICAgIGhhc2hfcGFzc3dvcmQgPSAkdXNlci5wYXNzd29yZAogICAgfSBhcyAkcGFzc19yZXN1bHQKICAKICAgIHByZWNvbmRpdGlvbiAoJHBhc3NfcmVzdWx0KSB7CiAgICAgIGVycm9yID0gIkludmFsaWQgQ3JlZGVudGlhbHMuIgogICAgfQogIAogICAgc2VjdXJpdHkuY3JlYXRlX2F1dGhfdG9rZW4gewogICAgICB0YWJsZSA9ICJ1c2VyIgogICAgICBleHRyYXMgPSB7fQogICAgICBleHBpcmF0aW9uID0gODY0MDAKICAgICAgaWQgPSAkdXNlci5pZAogICAgfSBhcyAkYXV0aFRva2VuCiAgfQoKICByZXNwb25zZSA9IHthdXRoVG9rZW46ICRhdXRoVG9rZW59Cn0="
@@ -291,7 +291,7 @@
     "id": 4074477,
     "type": "api_endpoint",
     "path": "apis/authentication/4074477_auth_me_GET.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "45ef8e1665f2d88b0b047ed7b2e1499846c0b53889173222299e0a6ca9aa0e8e",
     "original": "Ly8gR2V0IHRoZSByZWNvcmQgYmVsb25naW5nIHRvIHRoZSBhdXRoZW50aWNhdGlvbiB0b2tlbgpxdWVyeSAiYXV0aC9tZSIgdmVyYj1HRVQgewogIGFwaV9ncm91cCA9ICJBdXRoZW50aWNhdGlvbiIKICBhdXRoID0gInVzZXIiCgogIGlucHV0IHsKICB9CgogIHN0YWNrIHsKICAgIGRiLmdldCB1c2VyIHsKICAgICAgZmllbGRfbmFtZSA9ICJpZCIKICAgICAgZmllbGRfdmFsdWUgPSAkYXV0aC5pZAogICAgICBvdXRwdXQgPSBbCiAgICAgICAgImlkIgogICAgICAgICJjcmVhdGVkX2F0IgogICAgICAgICJuYW1lIgogICAgICAgICJlbWFpbCIKICAgICAgICAiYWNjb3VudF9pZCIKICAgICAgICAicm9sZSIKICAgICAgICAicGFzc3dvcmRfcmVzZXQiCiAgICAgIF0KICAgIH0gYXMgJHVzZXIKICB9CgogIHJlc3BvbnNlID0gJHVzZXIKfQ=="
