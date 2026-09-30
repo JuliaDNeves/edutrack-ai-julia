@@ -124,6 +124,34 @@ const EduTrackAuth = (() => {
     }
 
     /**
+     * Request password reset token by email
+     * POST /auth/request_password_reset
+     */
+    async function requestPasswordReset(email) {
+        const response = await fetch(`${XANO_BASE_URL}/auth/request_password_reset`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email.trim() })
+        });
+
+        return await parseResponse(response);
+    }
+
+    /**
+     * Complete password reset using token and new password
+     * POST /auth/reset_password
+     */
+    async function resetPassword(token, newPassword) {
+        const response = await fetch(`${XANO_BASE_URL}/auth/reset_password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, new_password: newPassword })
+        });
+
+        return await parseResponse(response);
+    }
+
+    /**
      * Logout user and redirect
      */
     function logout(redirectUrl = 'login.html') {
@@ -158,6 +186,8 @@ const EduTrackAuth = (() => {
         getAuthHeaders,
         login,
         signup,
+        requestPasswordReset,
+        resetPassword,
         getMe,
         logout,
         getInitials

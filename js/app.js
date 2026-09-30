@@ -154,15 +154,131 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================================================
-    // 4. Password Recovery Form Demonstration
+    // 4. Password Recovery Form Handling (auth/request_password_reset)
     // ==========================================================================
     const formRecovery = document.getElementById('form-recovery');
     if (formRecovery) {
-        formRecovery.addEventListener('submit', (e) => {
+        formRecovery.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const emailInput = document.getElementById('recovery-email');
+            const submitBtn = document.getElementById('btn-submit-recovery');
             const feedbackAlert = document.getElementById('recovery-feedback');
-            if (feedbackAlert) {
-                e.preventDefault();
+
+            if (!emailInput || !emailInput.value.trim()) return;
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+            }
+
+            try {
+                if (typeof EduTrackAuth !== 'undefined') {
+                    const result = await EduTrackAuth.requestPasswordReset(emailInput.value.trim());
+                    if (feedbackAlert) {
+                        feedbackAlert.className = 'auth-alert-success';
+                        const messageText = (result && result.message) ? result.message : 'Instruções de recuperação geradas com sucesso!';
+                        
+                        let continueBtnHtml = '';
+                        if (result && result.token) {
+                            continueBtnHtml = `
+                                <div style="margin-top: 12px;">
+                                    <a href="reset-password.html?token=${encodeURIComponent(result.token)}" class="auth-btn-primary full-width" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; border-radius: 8px; padding: 10px 16px; font-weight: 600;">
+                                        <i class="fa-solid fa-key"></i> Continuar para redefinir senha
+                                    </a>
+                                </div>
+                            `;
+                        }
+
+                        feedbackAlert.innerHTML = `
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div style="flex: 1;">
+                                <span>${messageText}</span>
+                                ${continueBtnHtml}
+                            </div>
+                        `;
+                        feedbackAlert.style.display = 'flex';
+                    }
+                } else {
+                    if (feedbackAlert) feedbackAlert.style.display = 'flex';
+                }
+            } catch (err) {
+                if (feedbackAlert) {
+                    feedbackAlert.className = 'auth-alert-error';
+                    feedbackAlert.innerHTML = `
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>${err.message || 'Erro ao solicitar recuperação de senha. Verifique o e-mail informado.'}</span>
+                    `;
+                    feedbackAlert.style.display = 'flex';
+                }
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Solicitar recuperação';
+                }
+            }
+        });
+    }
+
+    // ==========================================================================
+    // 4.1. Password Reset Completion Handling (auth/reset_password)
+    // ==========================================================================
+    const formResetPassword = document.getElementById('form-reset-password');
+    if (formResetPassword) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const resetToken = urlParams.get('token');
+        const feedbackAlert = document.getElementById('reset-feedback');
+        const feedbackText = document.getElementById('reset-feedback-text');
+
+        if (!resetToken) {
+            if (feedbackAlert && feedbackText) {
+                feedbackText.textContent = 'Token de redefinição ausente. Solicite uma nova recuperação de senha.';
                 feedbackAlert.style.display = 'flex';
+            }
+        }
+
+        formResetPassword.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const passwordInput = document.getElementById('reset-password');
+            const confirmPasswordInput = document.getElementById('reset-confirm-password');
+            const submitBtn = document.getElementById('btn-submit-reset');
+
+            if (feedbackAlert) feedbackAlert.style.display = 'none';
+
+            if (!resetToken) {
+                if (feedbackText && feedbackAlert) {
+                    feedbackText.textContent = 'Token de redefinição ausente na URL. Por favor, solicite a recuperação novamente.';
+                    feedbackAlert.style.display = 'flex';
+                }
+                return;
+            }
+
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                if (feedbackText && feedbackAlert) {
+                    feedbackText.textContent = 'As senhas não coincidem. Por favor, verifique.';
+                    feedbackAlert.style.display = 'flex';
+                }
+                return;
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Redefinindo...';
+            }
+
+            try {
+                if (typeof EduTrackAuth !== 'undefined') {
+                    await EduTrackAuth.resetPassword(resetToken, passwordInput.value);
+                    window.location.href = getAuthLoginUrl();
+                }
+            } catch (err) {
+                if (feedbackText && feedbackAlert) {
+                    feedbackText.textContent = err.message || 'Falha ao redefinir senha. O token pode ser inválido ou ter expirado.';
+                    feedbackAlert.style.display = 'flex';
+                }
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-key"></i> Redefinir senha';
+                }
             }
         });
     }
