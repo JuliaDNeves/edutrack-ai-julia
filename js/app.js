@@ -267,12 +267,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             try {
                 if (typeof EduTrackAuth !== 'undefined') {
-                    await EduTrackAuth.resetPassword(resetToken, passwordInput.value);
-                    window.location.href = getAuthLoginUrl();
+                    const result = await EduTrackAuth.resetPassword(resetToken, passwordInput.value);
+                    if (feedbackAlert) {
+                        feedbackAlert.className = 'auth-alert-success';
+                        const messageText = (result && result.message) ? result.message : 'Senha redefinida com sucesso!';
+                        feedbackAlert.innerHTML = `
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div style="flex: 1;">
+                                <span>${messageText}</span>
+                                <div style="margin-top: 12px;">
+                                    <a href="${getAuthLoginUrl()}" class="auth-btn-primary full-width" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; border-radius: 8px; padding: 10px 16px; font-weight: 600;">
+                                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Ir para o Login
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        feedbackAlert.style.display = 'flex';
+                    }
+                    if (submitBtn) submitBtn.style.display = 'none';
+                    setTimeout(() => {
+                        window.location.href = getAuthLoginUrl();
+                    }, 2000);
                 }
             } catch (err) {
-                if (feedbackText && feedbackAlert) {
-                    feedbackText.textContent = err.message || 'Falha ao redefinir senha. O token pode ser inválido ou ter expirado.';
+                if (feedbackAlert) {
+                    feedbackAlert.className = 'auth-alert-error';
+                    feedbackAlert.innerHTML = `
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>${err.message || 'Falha ao redefinir senha. O token pode ser inválido ou ter expirado.'}</span>
+                    `;
                     feedbackAlert.style.display = 'flex';
                 }
                 if (submitBtn) {

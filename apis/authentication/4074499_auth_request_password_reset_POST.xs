@@ -22,21 +22,14 @@ query "auth/request_password_reset" verb=POST {
     }
   
     security.create_uuid as $token
-    var $password_reset {
-      value = {}
-        |set:"token":$token
-        |set:"expiration":(now
-          |add_secs_to_timestamp:(3600|to_int)
-        )
-        |set:"used":false
-    }
-  
-    db.edit user {
-      field_name = "id"
-      field_value = $user.id
-      enforce_hidden_fields = false
-      data = {password_reset: $password_reset}
-    } as $updated_user
+    db.add password_reset_tokens {
+      data = {
+        user_id   : $user.id
+        token     : $token
+        expiration: now|add_secs_to_timestamp:(3600|to_int)
+        used      : false
+      }
+    } as $reset_token
   }
 
   response = {
