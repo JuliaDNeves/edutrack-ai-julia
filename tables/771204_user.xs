@@ -24,22 +24,6 @@ table user {
       values = ["admin", "member"]
       visibility = "private"
     }
-  
-    object password_reset? {
-      schema {
-        password token? {
-          visibility = "internal"
-        }
-      
-        timestamp? expiration? {
-          visibility = "internal"
-        }
-      
-        bool used? {
-          visibility = "internal"
-        }
-      }
-    }
   }
 
   index = [
