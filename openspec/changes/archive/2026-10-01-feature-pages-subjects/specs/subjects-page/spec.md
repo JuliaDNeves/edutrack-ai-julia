@@ -1,29 +1,29 @@
 # subjects-page Specification
 
 ## Purpose
-Provides a responsive management web interface for EduTrack AI users to view, create, update, and delete academic subjects.
+Provides a responsive management web interface for EduTrack AI users to view, create, update, and delete academic subjects with full metadata support.
 
 ## ADDED Requirements
 
 ### Requirement: Display user academic subjects
-The system SHALL fetch and display the list of academic subjects belonging exclusively to the authenticated user.
+The system SHALL fetch and display the list of academic subjects belonging exclusively to the authenticated user, rendering all subject metadata fields.
 
 #### Scenario: Authenticated user views subjects list
 - **WHEN** an authenticated user opens `pages/subjects.html`
-- **THEN** system sends GET `/subjects` with Authorization Bearer header and renders subject cards displaying subject name, teacher, and workload hours
+- **THEN** system sends GET `/subjects` with Authorization Bearer header and renders subject cards displaying name, teacher, workload hours, description, start date, and end date
 
 ### Requirement: Create new academic subject
-The system SHALL allow an authenticated user to add a new academic subject by submitting a form with name, teacher, and hours.
+The system SHALL allow an authenticated user to add a new academic subject by submitting a form with name, teacher, hours, description, start date, and end date.
 
 #### Scenario: User successfully creates a new subject
-- **WHEN** user fills in valid subject details (name, teacher, hours) in the create modal and clicks save
+- **WHEN** user fills in subject details (name, teacher, hours, description, start_date, end_date) in the create modal and clicks save
 - **THEN** system sends POST `/subjects` request with Authorization Bearer header, closes the modal, updates the subjects list, and shows a success toast notification
 
 ### Requirement: Edit existing subject
-The system SHALL allow an authenticated user to edit their existing subject details using a modal form.
+The system SHALL allow an authenticated user to edit their existing subject details using a modal form populated with current field values.
 
 #### Scenario: User updates an existing subject
-- **WHEN** user opens edit modal for a subject, updates fields (name, teacher, hours), and submits
+- **WHEN** user opens edit modal for a subject, updates any fields (name, teacher, hours, description, start_date, end_date), and submits
 - **THEN** system sends PATCH `/subjects/{subjects_id}` request with Authorization Bearer header, refreshes the subjects list, and displays a success notification
 
 ### Requirement: Delete subject with confirmation

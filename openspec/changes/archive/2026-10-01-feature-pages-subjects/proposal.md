@@ -5,13 +5,20 @@ EduTrack AI users need a dedicated standalone page (`pages/subjects.html`) to ma
 
 ## What Changes
 - Create `pages/subjects.html` as an independent page following EduTrack AI's design system (dark theme, cyan `#53dce3` / lilac `#a855f7` accents, rounded cards, responsive grid, Font Awesome icons).
-- Implement interactive CRUD operations for subjects:
-  - View list of user subjects (`GET /subjects`)
-  - Create new subject (`POST /subjects`)
-  - Edit existing subject (`PATCH /subjects/{subjects_id}`)
-  - Delete subject with confirmation modal (`DELETE /subjects/{subjects_id}`)
+- Implement interactive CRUD operations for subjects incorporating all supported fields:
+  - Subject Name (`name`)
+  - Professor / Teacher (`teacher`)
+  - Workload Hours (`hours`)
+  - Description (`description`)
+  - Start Date (`start_date`)
+  - End Date (`end_date`)
+- Connect frontend page with Xano REST API endpoints:
+  - `GET /subjects` (list subjects with all fields)
+  - `POST /subjects` (create subject with all fields)
+  - `PATCH /subjects/{subjects_id}` (edit subject with all fields)
+  - `DELETE /subjects/{subjects_id}` (delete subject)
+  - `subjects_search` (maintain compatibility for search filtering if utilized)
 - Reuse existing authentication mechanisms (`EduTrackAuth` service, `localStorage` bearer token, redirect to login if unauthenticated).
-- **Field Availability & Conflict Note**: Inspection of `tables/subjects.xs` and backend APIs (`apis/subjects/*`) confirmed available fields: `name` (Nome), `teacher` (Professor), and `hours` (Carga horária). The fields `Descrição`, `Data de início`, and `Data de fim` requested in the user prompt do not exist in the backend schema or APIs. Per instructions, Xano backend is NOT modified, and only existing fields (`name`, `teacher`, `hours`) are implemented in the UI.
 
 ## Capabilities
 
