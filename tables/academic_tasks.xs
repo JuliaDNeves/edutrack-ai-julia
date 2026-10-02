@@ -10,8 +10,13 @@ table academic_tasks {
   
     text title
     text description?
-    date due_date?
-    text status?=pending
+    date due_date
+    enum status?=pending {
+      values = ["pending", "completed"]
+    }
+  
+    int estimated_time
+    int spent_time?
   
     // Reference to the academic subject
     int subject_id {

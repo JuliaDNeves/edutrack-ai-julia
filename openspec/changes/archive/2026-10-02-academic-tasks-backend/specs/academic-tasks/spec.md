@@ -1,9 +1,6 @@
 # academic-tasks Specification
 
-## Purpose
-Define database structure for academic tasks and link them to subjects and authenticated users in EduTrack AI.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Academic Tasks Table Schema
 The system SHALL maintain an `academic_tasks` database table in Xano containing `id` (auto integer primary key), `title` (text, required), `description` (text, optional), `due_date` (date, required), `status` (text, required, allowed values: "pending" or "completed"), `estimated_time` (integer, required, stored in minutes), `spent_time` (integer, optional, stored in minutes), `subject_id` (table reference to `subjects`, required), `user_id` (table reference to `user`, required), and `created_at` (timestamp).
@@ -12,12 +9,7 @@ The system SHALL maintain an `academic_tasks` database table in Xano containing 
 - **WHEN** the `academic_tasks` table is defined in Xano
 - **THEN** system SHALL store tasks with required estimated_time in minutes and status restricted to pending or completed.
 
-### Requirement: User Isolation for Academic Tasks
-The system MUST associate every academic task record with the authenticated user's ID (`user_id`).
-
-#### Scenario: Store academic task record with user association
-- **WHEN** an academic task is created or updated
-- **THEN** the system SHALL enforce binding to the authenticated `user_id`.
+## ADDED Requirements
 
 ### Requirement: Subject Ownership Validation
 The system SHALL validate that the specified `subject_id` belongs to the authenticated user (`auth.id`) before allowing creation or update of an academic task, returning an access denied error if it belongs to another user or does not exist.
