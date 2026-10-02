@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="EduTrack AI - Gerenciamento de Disciplinas Acadêmicas">
-    <title>EduTrack AI - Disciplinas</title>
+    <meta name="description" content="EduTrack AI - Gerenciamento de Tarefas Acadêmicas">
+    <title>EduTrack AI - Tarefas</title>
     
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../css/styles.css">
 
     <style>
-        /* Custom modal and extra component styles for Subjects */
+        /* Custom modal and extra component styles for Tasks */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -121,6 +121,11 @@
             transition: var(--transition);
         }
 
+        .form-control option {
+            background-color: var(--bg-card, #121824);
+            color: var(--text-main, #ffffff);
+        }
+
         .form-control:focus {
             outline: none;
             border-color: var(--accent-cyan);
@@ -198,15 +203,15 @@
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
         }
 
-        /* Subjects Grid & Card Layout */
-        .subjects-grid {
+        /* Tasks Grid & Card Layout */
+        .tasks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
             margin-top: 24px;
         }
 
-        .subject-card {
+        .task-card {
             background: var(--gradient-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
@@ -220,13 +225,13 @@
             overflow: hidden;
         }
 
-        .subject-card:hover {
+        .task-card:hover {
             border-color: rgba(83, 220, 227, 0.3);
             transform: translateY(-3px);
             box-shadow: var(--shadow-card);
         }
 
-        .subject-card::before {
+        .task-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -238,28 +243,25 @@
             transition: var(--transition);
         }
 
-        .subject-card:hover::before {
+        .task-card:hover::before {
             opacity: 1;
         }
 
-        .subject-card-header {
+        .task-card-header {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             gap: 12px;
         }
 
-        .subject-title {
+        .task-title {
             font-size: 1.15rem;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.3;
         }
 
-        .subject-badge {
-            background: rgba(83, 220, 227, 0.1);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(83, 220, 227, 0.25);
+        .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -270,7 +272,33 @@
             gap: 5px;
         }
 
-        .subject-card-body {
+        .status-badge-pending {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-badge-completed {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .task-subject-tag {
+            background: rgba(83, 220, 227, 0.08);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(83, 220, 227, 0.2);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            width: fit-content;
+        }
+
+        .task-card-body {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -278,19 +306,19 @@
             color: var(--text-muted);
         }
 
-        .subject-info-item {
+        .task-info-item {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .subject-info-item i {
+        .task-info-item i {
             color: var(--accent-lilac);
             width: 16px;
             text-align: center;
         }
 
-        .subject-description-box {
+        .task-description-box {
             background: rgba(255, 255, 255, 0.02);
             border-radius: var(--radius-sm);
             padding: 10px 12px;
@@ -301,7 +329,7 @@
             margin-top: 4px;
         }
 
-        .subject-card-actions {
+        .task-card-actions {
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -427,13 +455,13 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item active" id="nav-disciplinas">
+                    <li class="nav-item" id="nav-disciplinas">
                         <a href="subjects.html" aria-label="Disciplinas">
                             <i class="fa-solid fa-book-bookmark"></i>
                             <span>Disciplinas</span>
                         </a>
                     </li>
-                    <li class="nav-item" id="nav-tarefas">
+                    <li class="nav-item active" id="nav-tarefas">
                         <a href="tasks.html" aria-label="Tarefas">
                             <i class="fa-solid fa-list-check"></i>
                             <span>Tarefas</span>
@@ -469,18 +497,18 @@
             <!-- Header Bar -->
             <header class="header-bar">
                 <div class="welcome-text">
-                    <h1 id="page-heading">Disciplinas <i class="fa-solid fa-book-bookmark" style="color: #53dce3; font-size: 1.2rem;"></i></h1>
-                    <p>Gerencie suas matérias, carga horária e cronograma acadêmico.</p>
+                    <h1 id="page-heading">Tarefas <i class="fa-solid fa-list-check" style="color: #53dce3; font-size: 1.2rem;"></i></h1>
+                    <p>Gerencie suas atividades acadêmicas, prazos, status e tempo de estudo.</p>
                 </div>
 
                 <div class="header-actions" style="display:flex; align-items:center; gap:16px;">
                     <div class="search-box">
-                        <input type="text" id="header-search" placeholder="Buscar por disciplina ou professor..." aria-label="Pesquisar">
+                        <input type="text" id="header-search" placeholder="Buscar por tarefa ou descrição..." aria-label="Pesquisar">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
 
                     <button class="btn-primary" id="btn-open-create-modal">
-                        <i class="fa-solid fa-plus"></i> Nova Disciplina
+                        <i class="fa-solid fa-plus"></i> Nova Tarefa
                     </button>
                 </div>
             </header>
@@ -499,27 +527,27 @@
             <!-- Stats Bar -->
             <div style="display:flex; align-items:center; justify-content:space-between; margin-top:20px; color:var(--text-muted); font-size:0.9rem;">
                 <div>
-                    <span id="subjects-count-label">Exibindo <strong>0</strong> disciplinas</span>
+                    <span id="tasks-count-label">Exibindo <strong>0</strong> tarefas</span>
                 </div>
-                <div id="total-hours-label">
-                    Total: <strong>0h</strong> de carga horária
+                <div id="total-time-label">
+                    Total: <strong>0 min</strong> de tempo estimado
                 </div>
             </div>
 
-            <!-- Subjects Grid Container -->
-            <div class="subjects-grid" id="subjects-grid">
+            <!-- Tasks Grid Container -->
+            <div class="tasks-grid" id="tasks-grid">
                 <!-- Dynamic cards rendered via JavaScript -->
             </div>
 
             <!-- Empty State Container -->
             <div class="empty-state-card" id="empty-state" style="display: none;">
                 <div class="empty-state-icon">
-                    <i class="fa-solid fa-book-open"></i>
+                    <i class="fa-solid fa-list-check"></i>
                 </div>
-                <h3>Nenhuma disciplina cadastrada</h3>
-                <p>Cadastre suas matérias acadêmicas para organizar tarefas, acompanhamento de professores e prazos de aulas.</p>
+                <h3>Nenhuma tarefa cadastrada</h3>
+                <p>Cadastre suas tarefas acadêmicas para organizar seus estudos e controlar seu tempo de dedicação.</p>
                 <button class="btn-primary" id="btn-empty-create">
-                    <i class="fa-solid fa-plus"></i> Cadastrar Primeira Disciplina
+                    <i class="fa-solid fa-plus"></i> Cadastrar Primeira Tarefa
                 </button>
             </div>
 
@@ -527,59 +555,69 @@
     </div>
 
     <!-- ==========================================================================
-         Create / Edit Subject Modal
+         Create / Edit Task Modal
          ========================================================================== -->
-    <div class="modal-overlay" id="subject-modal" style="display: none;">
+    <div class="modal-overlay" id="task-modal" style="display: none;">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 id="modal-title"><i class="fa-solid fa-book-medical" style="color:#53dce3;"></i> Nova Disciplina</h3>
+                <h3 id="modal-title"><i class="fa-solid fa-plus-circle" style="color:#53dce3;"></i> Nova Tarefa</h3>
                 <button class="btn-close-modal" id="btn-close-modal" title="Fechar">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="form-subject">
+            <form id="form-task">
                 <div class="modal-body">
-                    <input type="hidden" id="subject-id" value="">
+                    <input type="hidden" id="task-id" value="">
 
                     <div class="form-group">
-                        <label for="subject-name">Nome da Disciplina *</label>
-                        <input type="text" id="subject-name" class="form-control" placeholder="Ex: Cálculo Diferencial e Integral" required>
+                        <label for="task-title">Título da Tarefa *</label>
+                        <input type="text" id="task-title" class="form-control" placeholder="Ex: Resolver lista de exercícios de Cálculo" required>
                     </div>
 
                     <div class="form-row-2">
                         <div class="form-group">
-                            <label for="subject-teacher">Professor / Docente</label>
-                            <input type="text" id="subject-teacher" class="form-control" placeholder="Ex: Prof. Dr. Silva">
+                            <label for="task-subject">Disciplina *</label>
+                            <select id="task-subject" class="form-control" required>
+                                <option value="" disabled selected>Selecione uma disciplina...</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="subject-hours">Carga Horária (horas)</label>
-                            <input type="number" id="subject-hours" class="form-control" placeholder="Ex: 60" min="0" step="1">
+                            <label for="task-status">Status *</label>
+                            <select id="task-status" class="form-control" required>
+                                <option value="pending">Pendente</option>
+                                <option value="completed">Concluída</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-row-2">
                         <div class="form-group">
-                            <label for="subject-start-date">Data de Início</label>
-                            <input type="date" id="subject-start-date" class="form-control">
+                            <label for="task-due-date">Data Prevista *</label>
+                            <input type="date" id="task-due-date" class="form-control" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="subject-end-date">Data de Término</label>
-                            <input type="date" id="subject-end-date" class="form-control">
+                            <label for="task-estimated-time">Tempo Estimado (minutos) *</label>
+                            <input type="number" id="task-estimated-time" class="form-control" placeholder="Ex: 60" min="1" step="1" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="subject-description">Descrição / Ementa</label>
-                        <textarea id="subject-description" class="form-control" placeholder="Insira detalhes da disciplina, código de turma ou observações..."></textarea>
+                        <label for="task-spent-time">Tempo Gasto (minutos)</label>
+                        <input type="number" id="task-spent-time" class="form-control" placeholder="Ex: 45 (opcional)" min="0" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-description">Descrição</label>
+                        <textarea id="task-description" class="form-control" placeholder="Insira instruções, capítulos para leitura ou anotações extras..."></textarea>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary" id="btn-cancel-subject">Cancelar</button>
-                    <button type="submit" class="btn-primary" id="btn-save-subject">
+                    <button type="button" class="btn-secondary" id="btn-cancel-task">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="btn-save-task">
                         <i class="fa-solid fa-floppy-disk"></i> Salvar
                     </button>
                 </div>
@@ -601,7 +639,7 @@
 
             <div class="modal-body">
                 <p style="color:var(--text-main); font-size:0.95rem; line-height:1.5;">
-                    Tem certeza de que deseja excluir a disciplina <strong id="delete-subject-title" style="color:var(--accent-cyan);"></strong>?
+                    Tem certeza de que deseja excluir a tarefa <strong id="delete-task-title" style="color:var(--accent-cyan);"></strong>?
                 </p>
                 <p style="color:var(--text-muted); font-size:0.85rem;">
                     Esta ação removerá o registro permanentemente do EduTrack AI.
@@ -620,7 +658,7 @@
     <!-- Centralized Auth Service -->
     <script src="../js/auth.js"></script>
 
-    <!-- Subjects Management Logic -->
+    <!-- Tasks Management Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             // 1. Authentication Guard
@@ -654,31 +692,32 @@
             }
 
             // 2. DOM Elements
-            const gridEl = document.getElementById('subjects-grid');
+            const gridEl = document.getElementById('tasks-grid');
             const emptyStateEl = document.getElementById('empty-state');
-            const countLabelEl = document.getElementById('subjects-count-label');
-            const totalHoursEl = document.getElementById('total-hours-label');
+            const countLabelEl = document.getElementById('tasks-count-label');
+            const totalTimeEl = document.getElementById('total-time-label');
             const searchInput = document.getElementById('header-search');
 
-            const subjectModal = document.getElementById('subject-modal');
+            const taskModal = document.getElementById('task-modal');
             const modalTitle = document.getElementById('modal-title');
-            const formSubject = document.getElementById('form-subject');
-            const subjectIdInput = document.getElementById('subject-id');
-            const nameInput = document.getElementById('subject-name');
-            const teacherInput = document.getElementById('subject-teacher');
-            const hoursInput = document.getElementById('subject-hours');
-            const startDateInput = document.getElementById('subject-start-date');
-            const endDateInput = document.getElementById('subject-end-date');
-            const descriptionInput = document.getElementById('subject-description');
+            const formTask = document.getElementById('form-task');
+            const taskIdInput = document.getElementById('task-id');
+            const titleInput = document.getElementById('task-title');
+            const subjectSelect = document.getElementById('task-subject');
+            const statusSelect = document.getElementById('task-status');
+            const dueDateInput = document.getElementById('task-due-date');
+            const estimatedTimeInput = document.getElementById('task-estimated-time');
+            const spentTimeInput = document.getElementById('task-spent-time');
+            const descriptionInput = document.getElementById('task-description');
 
             const btnOpenCreate = document.getElementById('btn-open-create-modal');
             const btnEmptyCreate = document.getElementById('btn-empty-create');
             const btnCloseModal = document.getElementById('btn-close-modal');
-            const btnCancelSubject = document.getElementById('btn-cancel-subject');
-            const btnSaveSubject = document.getElementById('btn-save-subject');
+            const btnCancelTask = document.getElementById('btn-cancel-task');
+            const btnSaveTask = document.getElementById('btn-save-task');
 
             const deleteModal = document.getElementById('delete-modal');
-            const deleteTitleEl = document.getElementById('delete-subject-title');
+            const deleteTitleEl = document.getElementById('delete-task-title');
             const btnCloseDeleteModal = document.getElementById('btn-close-delete-modal');
             const btnCancelDelete = document.getElementById('btn-cancel-delete');
             const btnConfirmDelete = document.getElementById('btn-confirm-delete');
@@ -687,8 +726,13 @@
             const alertIcon = document.getElementById('alert-icon');
             const alertMessage = document.getElementById('alert-message');
 
-            let subjectsList = [];
-            let deletingSubjectId = null;
+            let tasksList = [];
+            let subjectsMap = new Map(); // id -> name
+            let deletingTaskId = null;
+
+            // Base URLs
+            const tasksBaseUrl = EduTrackAuth.XANO_TASKS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:8PdLH3Ls';
+            const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
 
             // 3. UI Helpers
             function showAlert(message, type = 'success') {
@@ -707,8 +751,7 @@
             function formatDate(dateString) {
                 if (!dateString) return null;
                 try {
-                    // Accepts YYYY-MM-DD or timestamp
-                    const parts = dateString.split('-');
+                    const parts = String(dateString).split('T')[0].split('-');
                     if (parts.length === 3) {
                         return `${parts[2]}/${parts[1]}/${parts[0]}`;
                     }
@@ -720,50 +763,69 @@
                 }
             }
 
-            function openCreateModal() {
-                formSubject.reset();
-                subjectIdInput.value = '';
-                modalTitle.innerHTML = '<i class="fa-solid fa-book-medical" style="color:#53dce3;"></i> Nova Disciplina';
-                subjectModal.style.display = 'flex';
-                nameInput.focus();
+            function formatTimeMinutes(minutes) {
+                if (minutes === null || minutes === undefined || minutes === '') return '0 min';
+                const mins = Number(minutes);
+                if (isNaN(mins)) return '0 min';
+                if (mins < 60) return `${mins} min`;
+                const hrs = Math.floor(mins / 60);
+                const remMins = mins % 60;
+                return remMins > 0 ? `${hrs}h ${remMins}min` : `${hrs}h`;
             }
 
-            function openEditModal(subject) {
-                formSubject.reset();
-                subjectIdInput.value = subject.id;
-                modalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square" style="color:#53dce3;"></i> Editar Disciplina';
-                
-                nameInput.value = subject.name || '';
-                teacherInput.value = subject.teacher || '';
-                hoursInput.value = subject.hours !== null && subject.hours !== undefined ? subject.hours : '';
-                startDateInput.value = subject.start_date || '';
-                endDateInput.value = subject.end_date || '';
-                descriptionInput.value = subject.description || '';
+            function openCreateModal() {
+                formTask.reset();
+                taskIdInput.value = '';
+                statusSelect.value = 'pending';
+                modalTitle.innerHTML = '<i class="fa-solid fa-plus-circle" style="color:#53dce3;"></i> Nova Tarefa';
+                taskModal.style.display = 'flex';
+                titleInput.focus();
+            }
 
-                subjectModal.style.display = 'flex';
-                nameInput.focus();
+            function openEditModal(task) {
+                formTask.reset();
+                taskIdInput.value = task.id;
+                modalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square" style="color:#53dce3;"></i> Editar Tarefa';
+                
+                titleInput.value = task.title || '';
+                subjectSelect.value = task.subject_id || '';
+                statusSelect.value = task.status || 'pending';
+                
+                // Format due_date for input[type="date"] (YYYY-MM-DD)
+                if (task.due_date) {
+                    const formatted = String(task.due_date).split('T')[0];
+                    dueDateInput.value = formatted;
+                } else {
+                    dueDateInput.value = '';
+                }
+
+                estimatedTimeInput.value = task.estimated_time !== null && task.estimated_time !== undefined ? task.estimated_time : '';
+                spentTimeInput.value = task.spent_time !== null && task.spent_time !== undefined ? task.spent_time : '';
+                descriptionInput.value = task.description || '';
+
+                taskModal.style.display = 'flex';
+                titleInput.focus();
             }
 
             function closeModal() {
-                subjectModal.style.display = 'none';
-                formSubject.reset();
+                taskModal.style.display = 'none';
+                formTask.reset();
             }
 
-            function openDeleteModal(subject) {
-                deletingSubjectId = subject.id;
-                deleteTitleEl.textContent = subject.name;
+            function openDeleteModal(task) {
+                deletingTaskId = task.id;
+                deleteTitleEl.textContent = task.title;
                 deleteModal.style.display = 'flex';
             }
 
             function closeDeleteModal() {
-                deletingSubjectId = null;
+                deletingTaskId = null;
                 deleteModal.style.display = 'none';
             }
 
             // 4. API Calls
             async function fetchSubjects() {
                 try {
-                    const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
                     const response = await fetch(`${subjectsBaseUrl}/subjects`, {
                         method: 'GET',
                         headers: EduTrackAuth.getAuthHeaders()
@@ -775,87 +837,132 @@
                     }
 
                     const data = await response.json();
-                    subjectsList = Array.isArray(data) ? data : [];
-                    renderSubjects();
+                    const subjects = Array.isArray(data) ? data : [];
+                    
+                    subjectsMap.clear();
+                    subjectSelect.innerHTML = '<option value="" disabled selected>Selecione uma disciplina...</option>';
+
+                    if (subjects.length === 0) {
+                        const opt = document.createElement('option');
+                        opt.value = '';
+                        opt.disabled = true;
+                        opt.textContent = 'Nenhuma disciplina cadastrada';
+                        subjectSelect.appendChild(opt);
+                    } else {
+                        subjects.forEach(s => {
+                            subjectsMap.set(s.id, s.name);
+                            const opt = document.createElement('option');
+                            opt.value = s.id;
+                            opt.textContent = s.name;
+                            subjectSelect.appendChild(opt);
+                        });
+                    }
                 } catch (err) {
-                    console.error('Erro ao buscar disciplinas:', err);
-                    showAlert('Não foi possível carregar a lista de disciplinas.', 'error');
+                    console.error('Erro ao buscar disciplinas para select:', err);
                 }
             }
 
-            function renderSubjects() {
+            async function fetchTasks() {
+                try {
+                    const response = await fetch(`${tasksBaseUrl}/academic_tasks`, {
+                        method: 'GET',
+                        headers: EduTrackAuth.getAuthHeaders()
+                    });
+
+                    if (response.status === 401) {
+                        EduTrackAuth.logout('auth/login.html');
+                        return;
+                    }
+
+                    const data = await response.json();
+                    tasksList = Array.isArray(data) ? data : [];
+                    renderTasks();
+                } catch (err) {
+                    console.error('Erro ao buscar tarefas:', err);
+                    showAlert('Não foi possível carregar a lista de tarefas.', 'error');
+                }
+            }
+
+            function renderTasks() {
                 const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-                const filtered = subjectsList.filter(s => {
-                    const matchName = s.name && s.name.toLowerCase().includes(query);
-                    const matchTeacher = s.teacher && s.teacher.toLowerCase().includes(query);
-                    return matchName || matchTeacher;
+                const filtered = tasksList.filter(t => {
+                    const matchTitle = t.title && t.title.toLowerCase().includes(query);
+                    const matchDesc = t.description && t.description.toLowerCase().includes(query);
+                    const subjectName = subjectsMap.get(t.subject_id) || '';
+                    const matchSubject = subjectName.toLowerCase().includes(query);
+                    return matchTitle || matchDesc || matchSubject;
                 });
 
-                if (subjectsList.length === 0) {
+                if (tasksList.length === 0) {
                     gridEl.style.display = 'none';
                     emptyStateEl.style.display = 'flex';
-                    if (countLabelEl) countLabelEl.innerHTML = 'Exibindo <strong>0</strong> disciplinas';
-                    if (totalHoursEl) totalHoursEl.innerHTML = 'Total: <strong>0h</strong> de carga horária';
+                    if (countLabelEl) countLabelEl.innerHTML = 'Exibindo <strong>0</strong> tarefas';
+                    if (totalTimeEl) totalTimeEl.innerHTML = 'Total: <strong>0 min</strong> de tempo estimado';
                     return;
                 }
 
                 emptyStateEl.style.display = 'none';
                 gridEl.style.display = 'grid';
 
-                const totalHours = subjectsList.reduce((acc, curr) => acc + (Number(curr.hours) || 0), 0);
-                if (countLabelEl) countLabelEl.innerHTML = `Exibindo <strong>${filtered.length}</strong> de <strong>${subjectsList.length}</strong> disciplinas`;
-                if (totalHoursEl) totalHoursEl.innerHTML = `Total: <strong>${totalHours}h</strong> de carga horária`;
+                const totalEstimatedMinutes = tasksList.reduce((acc, curr) => acc + (Number(curr.estimated_time) || 0), 0);
+                if (countLabelEl) countLabelEl.innerHTML = `Exibindo <strong>${filtered.length}</strong> de <strong>${tasksList.length}</strong> tarefas`;
+                if (totalTimeEl) totalTimeEl.innerHTML = `Total: <strong>${formatTimeMinutes(totalEstimatedMinutes)}</strong> de tempo estimado`;
 
                 if (filtered.length === 0) {
                     gridEl.innerHTML = `
                         <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
                             <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 12px; opacity: 0.5;"></i>
-                            <p>Nenhuma disciplina encontrada para "${query}".</p>
+                            <p>Nenhuma tarefa encontrada para "${query}".</p>
                         </div>
                     `;
                     return;
                 }
 
-                gridEl.innerHTML = filtered.map(s => {
-                    const hoursBadge = s.hours !== null && s.hours !== undefined && s.hours !== '' 
-                        ? `<span class="subject-badge"><i class="fa-solid fa-clock"></i> ${s.hours}h</span>` 
+                gridEl.innerHTML = filtered.map(t => {
+                    const statusClass = t.status === 'completed' ? 'status-badge-completed' : 'status-badge-pending';
+                    const statusText = t.status === 'completed' ? 'Concluída' : 'Pendente';
+                    const statusIcon = t.status === 'completed' ? 'fa-circle-check' : 'fa-clock';
+
+                    const statusBadge = `<span class="status-badge ${statusClass}"><i class="fa-solid ${statusIcon}"></i> ${statusText}</span>`;
+
+                    const subjectName = subjectsMap.get(t.subject_id) || `Disciplina #${t.subject_id}`;
+                    const subjectTag = `<span class="task-subject-tag"><i class="fa-solid fa-book"></i> ${escapeHtml(subjectName)}</span>`;
+
+                    const formattedDueDate = formatDate(t.due_date);
+                    const dueDateLine = formattedDueDate
+                        ? `<div class="task-info-item"><i class="fa-solid fa-calendar-days"></i> <span>Entrega: ${formattedDueDate}</span></div>`
                         : '';
-                    
-                    const teacherLine = s.teacher 
-                        ? `<div class="subject-info-item"><i class="fa-solid fa-chalkboard-user"></i> <span>Prof. ${escapeHtml(s.teacher)}</span></div>` 
-                        : '';
 
-                    const formattedStart = formatDate(s.start_date);
-                    const formattedEnd = formatDate(s.end_date);
+                    const estimatedText = formatTimeMinutes(t.estimated_time);
+                    const spentText = t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '' 
+                        ? formatTimeMinutes(t.spent_time) 
+                        : null;
 
-                    let datesLine = '';
-                    if (formattedStart || formattedEnd) {
-                        const dateText = formattedStart && formattedEnd 
-                            ? `${formattedStart} a ${formattedEnd}` 
-                            : (formattedStart ? `Início: ${formattedStart}` : `Término: ${formattedEnd}`);
-                        datesLine = `<div class="subject-info-item"><i class="fa-solid fa-calendar-days"></i> <span>${dateText}</span></div>`;
-                    }
+                    const timeLine = `<div class="task-info-item"><i class="fa-solid fa-hourglass-half"></i> <span>Estimado: ${estimatedText}${spentText ? ` | Gasto: ${spentText}` : ''}</span></div>`;
 
-                    const descBox = s.description 
-                        ? `<div class="subject-description-box"><i class="fa-solid fa-align-left" style="color:var(--accent-lilac); margin-right:4px;"></i> ${escapeHtml(s.description)}</div>` 
+                    const descBox = t.description 
+                        ? `<div class="task-description-box"><i class="fa-solid fa-align-left" style="color:var(--accent-lilac); margin-right:4px;"></i> ${escapeHtml(t.description)}</div>` 
                         : '';
 
                     return `
-                        <div class="subject-card" data-id="${s.id}">
-                            <div class="subject-card-header">
-                                <h3 class="subject-title">${escapeHtml(s.name)}</h3>
-                                ${hoursBadge}
+                        <div class="task-card" data-id="${t.id}">
+                            <div class="task-card-header">
+                                <h3 class="task-title">${escapeHtml(t.title)}</h3>
+                                ${statusBadge}
                             </div>
-                            <div class="subject-card-body">
-                                ${teacherLine}
-                                ${datesLine}
+                            <div>
+                                ${subjectTag}
+                            </div>
+                            <div class="task-card-body">
+                                ${dueDateLine}
+                                ${timeLine}
                                 ${descBox}
                             </div>
-                            <div class="subject-card-actions">
-                                <button type="button" class="btn-card-action edit-action" onclick="window.editSubject(${s.id})">
+                            <div class="task-card-actions">
+                                <button type="button" class="btn-card-action edit-action" onclick="window.editTask(${t.id})">
                                     <i class="fa-solid fa-pen-to-square"></i> Editar
                                 </button>
-                                <button type="button" class="btn-card-action delete-action" onclick="window.deleteSubject(${s.id})">
+                                <button type="button" class="btn-card-action delete-action" onclick="window.deleteTask(${t.id})">
                                     <i class="fa-solid fa-trash-can"></i> Excluir
                                 </button>
                             </div>
@@ -874,45 +981,60 @@
             }
 
             // Expose Window action handlers
-            window.editSubject = (id) => {
-                const subject = subjectsList.find(s => s.id === id);
-                if (subject) openEditModal(subject);
+            window.editTask = (id) => {
+                const task = tasksList.find(t => t.id === id);
+                if (task) openEditModal(task);
             };
 
-            window.deleteSubject = (id) => {
-                const subject = subjectsList.find(s => s.id === id);
-                if (subject) openDeleteModal(subject);
+            window.deleteTask = (id) => {
+                const task = tasksList.find(t => t.id === id);
+                if (task) openDeleteModal(task);
             };
 
             // Form Submit Handler (POST / PATCH)
-            formSubject.addEventListener('submit', async (e) => {
+            formTask.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                const id = subjectIdInput.value;
+                const id = taskIdInput.value;
                 const isEdit = !!id;
 
                 const payload = {
-                    name: nameInput.value.trim(),
-                    teacher: teacherInput.value.trim() || null,
-                    hours: hoursInput.value ? Number(hoursInput.value) : null,
-                    description: descriptionInput.value.trim() || null,
-                    start_date: startDateInput.value || null,
-                    end_date: endDateInput.value || null
+                    title: titleInput.value.trim(),
+                    subject_id: Number(subjectSelect.value),
+                    status: statusSelect.value,
+                    due_date: dueDateInput.value,
+                    estimated_time: Number(estimatedTimeInput.value),
+                    spent_time: spentTimeInput.value !== '' ? Number(spentTimeInput.value) : null,
+                    description: descriptionInput.value.trim() || null
                 };
 
-                if (!payload.name) {
-                    showAlert('O nome da disciplina é obrigatório.', 'error');
+                if (!payload.title) {
+                    showAlert('O título da tarefa é obrigatório.', 'error');
                     return;
                 }
 
-                btnSaveSubject.disabled = true;
-                btnSaveSubject.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+                if (!payload.subject_id) {
+                    showAlert('Selecione uma disciplina.', 'error');
+                    return;
+                }
+
+                if (!payload.due_date) {
+                    showAlert('A data prevista é obrigatória.', 'error');
+                    return;
+                }
+
+                if (isNaN(payload.estimated_time) || payload.estimated_time <= 0) {
+                    showAlert('O tempo estimado deve ser maior que zero minutos.', 'error');
+                    return;
+                }
+
+                btnSaveTask.disabled = true;
+                btnSaveTask.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
 
                 try {
-                    const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
                     const url = isEdit 
-                        ? `${subjectsBaseUrl}/subjects/${id}` 
-                        : `${subjectsBaseUrl}/subjects`;
+                        ? `${tasksBaseUrl}/academic_tasks/${id}` 
+                        : `${tasksBaseUrl}/academic_tasks`;
                     
                     const method = isEdit ? 'PATCH' : 'POST';
 
@@ -924,46 +1046,45 @@
 
                     if (!response.ok) {
                         const errData = await response.json().catch(() => ({}));
-                        throw new Error(errData.message || errData.error || 'Erro ao salvar disciplina.');
+                        throw new Error(errData.message || errData.error || 'Erro ao salvar tarefa.');
                     }
 
-                    showAlert(`Disciplina ${isEdit ? 'atualizada' : 'criada'} com sucesso!`, 'success');
+                    showAlert(`Tarefa ${isEdit ? 'atualizada' : 'criada'} com sucesso!`, 'success');
                     closeModal();
-                    await fetchSubjects();
+                    await fetchTasks();
                 } catch (err) {
-                    console.error('Erro ao salvar disciplina:', err);
-                    showAlert(err.message || 'Falha ao salvar disciplina.', 'error');
+                    console.error('Erro ao salvar tarefa:', err);
+                    showAlert(err.message || 'Falha ao salvar tarefa.', 'error');
                 } finally {
-                    btnSaveSubject.disabled = false;
-                    btnSaveSubject.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar';
+                    btnSaveTask.disabled = false;
+                    btnSaveTask.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar';
                 }
             });
 
             // Confirm Delete Handler (DELETE)
             btnConfirmDelete.addEventListener('click', async () => {
-                if (!deletingSubjectId) return;
+                if (!deletingTaskId) return;
 
                 btnConfirmDelete.disabled = true;
                 btnConfirmDelete.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Excluindo...';
 
                 try {
-                    const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
-                    const response = await fetch(`${subjectsBaseUrl}/subjects/${deletingSubjectId}`, {
+                    const response = await fetch(`${tasksBaseUrl}/academic_tasks/${deletingTaskId}`, {
                         method: 'DELETE',
                         headers: EduTrackAuth.getAuthHeaders()
                     });
 
                     if (!response.ok) {
                         const errData = await response.json().catch(() => ({}));
-                        throw new Error(errData.message || errData.error || 'Erro ao excluir disciplina.');
+                        throw new Error(errData.message || errData.error || 'Erro ao excluir tarefa.');
                     }
 
-                    showAlert('Disciplina excluída com sucesso!', 'success');
+                    showAlert('Tarefa excluída com sucesso!', 'success');
                     closeDeleteModal();
-                    await fetchSubjects();
+                    await fetchTasks();
                 } catch (err) {
-                    console.error('Erro ao excluir disciplina:', err);
-                    showAlert(err.message || 'Falha ao excluir disciplina.', 'error');
+                    console.error('Erro ao excluir tarefa:', err);
+                    showAlert(err.message || 'Falha ao excluir tarefa.', 'error');
                 } finally {
                     btnConfirmDelete.disabled = false;
                     btnConfirmDelete.innerHTML = '<i class="fa-solid fa-trash-can"></i> Confirmar Exclusão';
@@ -974,15 +1095,16 @@
             if (btnOpenCreate) btnOpenCreate.addEventListener('click', openCreateModal);
             if (btnEmptyCreate) btnEmptyCreate.addEventListener('click', openCreateModal);
             if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
-            if (btnCancelSubject) btnCancelSubject.addEventListener('click', closeModal);
+            if (btnCancelTask) btnCancelTask.addEventListener('click', closeModal);
 
             if (btnCloseDeleteModal) btnCloseDeleteModal.addEventListener('click', closeDeleteModal);
             if (btnCancelDelete) btnCancelDelete.addEventListener('click', closeDeleteModal);
 
-            if (searchInput) searchInput.addEventListener('input', renderSubjects);
+            if (searchInput) searchInput.addEventListener('input', renderTasks);
 
-            // Initial Fetch
+            // Initial Data Fetching
             await fetchSubjects();
+            await fetchTasks();
         });
     </script>
 </body>
