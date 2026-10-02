@@ -8,6 +8,9 @@ query "subjects/{subjects_id}" verb=PATCH {
     text name?
     text teacher?
     int hours?
+    text description?
+    date start_date?
+    date end_date?
   }
 
   stack {

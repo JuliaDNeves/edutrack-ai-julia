@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduTrack AI - Gerenciamento de Disciplinas Acadêmicas">
+    <title>EduTrack AI - Disciplinas</title>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <style>
+        /* Custom modal and extra component styles for Subjects */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(9, 13, 22, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 580px;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            animation: modalFadeIn 0.25s ease-out;
+        }
+
+        .modal-card-sm {
+            max-width: 440px;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-close-modal:hover {
+            color: var(--accent-cyan);
+        }
+
+        .modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(83, 220, 227, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--bg-main);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-cyan);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Subjects Grid & Card Layout */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .subject-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card:hover {
+            border-color: rgba(83, 220, 227, 0.3);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .subject-card:hover::before {
+            opacity: 1;
+        }
+
+        .subject-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .subject-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .subject-badge {
+            background: rgba(83, 220, 227, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(83, 220, 227, 0.25);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .subject-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .subject-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subject-info-item i {
+            color: var(--accent-lilac);
+            width: 16px;
+            text-align: center;
+        }
+
+        .subject-description-box {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .subject-card-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-card-action {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-card-action:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-card-action.edit-action:hover {
+            color: var(--accent-cyan);
+            border-color: rgba(83, 220, 227, 0.3);
+        }
+
+        .btn-card-action.delete-action:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Empty State Card */
+        .empty-state-card {
+            background: var(--bg-card);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 48px 24px;
+            text-align: center;
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(83, 220, 227, 0.1);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .empty-state-card h3 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        .empty-state-card p {
+            color: var(--text-muted);
+            max-width: 440px;
+            font-size: 0.95rem;
+        }
+
+        /* Feedback Toast Banner */
+        .alert-banner {
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .alert-banner-success {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+
+        .alert-banner-error {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+         Fixed Left Sidebar Navigation
+         ========================================================================== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="brand">
+                <a href="../index.html" class="brand-link" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <span class="brand-title">EduTrack</span>
+                </a>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item" id="nav-dashboard">
+                        <a href="dashboard.html" aria-label="Dashboard">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active" id="nav-disciplinas">
+                        <a href="subjects.html" aria-label="Disciplinas">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                            <span>Disciplinas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-tarefas">
+                        <a href="../tarefas.html" aria-label="Tarefas">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Tarefas</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-quick-info" id="sidebar-user-profile" aria-label="Opções de conta">
+                <div class="user-profile-default">
+                    <div class="avatar-mini" id="user-avatar-mini">--</div>
+                    <div class="user-quick-details">
+                        <h4 id="user-name-sidebar">Carregando...</h4>
+                        <p id="user-email-sidebar">Estudante</p>
+                    </div>
+                </div>
+                <div class="user-account-action" id="btn-logout" title="Sair da conta" style="cursor: pointer;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Sair</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==========================================================================
+         Main App Container
+         ========================================================================== -->
+    <div class="app-container">
+        <main class="main-content" id="main-content">
+            
+            <!-- Header Bar -->
+            <header class="header-bar">
+                <div class="welcome-text">
+                    <h1 id="page-heading">Disciplinas <i class="fa-solid fa-book-bookmark" style="color: #53dce3; font-size: 1.2rem;"></i></h1>
+                    <p>Gerencie suas matérias, carga horária e cronograma acadêmico.</p>
+                </div>
+
+                <div class="header-actions" style="display:flex; align-items:center; gap:16px;">
+                    <div class="search-box">
+                        <input type="text" id="header-search" placeholder="Buscar por disciplina ou professor..." aria-label="Pesquisar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+
+                    <button class="btn-primary" id="btn-open-create-modal">
+                        <i class="fa-solid fa-plus"></i> Nova Disciplina
+                    </button>
+                </div>
+            </header>
+
+            <!-- Alert Feedback Notification -->
+            <div id="alert-feedback" class="alert-banner" style="display: none;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i id="alert-icon" class="fa-solid fa-circle-info"></i>
+                    <span id="alert-message">Mensagem de notificação</span>
+                </div>
+                <button type="button" onclick="document.getElementById('alert-feedback').style.display='none'" style="background:none; border:none; color:inherit; cursor:pointer;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Stats Bar -->
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:20px; color:var(--text-muted); font-size:0.9rem;">
+                <div>
+                    <span id="subjects-count-label">Exibindo <strong>0</strong> disciplinas</span>
+                </div>
+                <div id="total-hours-label">
+                    Total: <strong>0h</strong> de carga horária
+                </div>
+            </div>
+
+            <!-- Subjects Grid Container -->
+            <div class="subjects-grid" id="subjects-grid">
+                <!-- Dynamic cards rendered via JavaScript -->
+            </div>
+
+            <!-- Empty State Container -->
+            <div class="empty-state-card" id="empty-state" style="display: none;">
+                <div class="empty-state-icon">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <h3>Nenhuma disciplina cadastrada</h3>
+                <p>Cadastre suas matérias acadêmicas para organizar tarefas, acompanhamento de professores e prazos de aulas.</p>
+                <button class="btn-primary" id="btn-empty-create">
+                    <i class="fa-solid fa-plus"></i> Cadastrar Primeira Disciplina
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ==========================================================================
+         Create / Edit Subject Modal
+         ========================================================================== -->
+    <div class="modal-overlay" id="subject-modal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title"><i class="fa-solid fa-book-medical" style="color:#53dce3;"></i> Nova Disciplina</h3>
+                <button class="btn-close-modal" id="btn-close-modal" title="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="form-subject">
+                <div class="modal-body">
+                    <input type="hidden" id="subject-id" value="">
+
+                    <div class="form-group">
+                        <label for="subject-name">Nome da Disciplina *</label>
+                        <input type="text" id="subject-name" class="form-control" placeholder="Ex: Cálculo Diferencial e Integral" required>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="subject-teacher">Professor / Docente</label>
+                            <input type="text" id="subject-teacher" class="form-control" placeholder="Ex: Prof. Dr. Silva">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject-hours">Carga Horária (horas)</label>
+                            <input type="number" id="subject-hours" class="form-control" placeholder="Ex: 60" min="0" step="1">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="subject-start-date">Data de Início</label>
+                            <input type="date" id="subject-start-date" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject-end-date">Data de Término</label>
+                            <input type="date" id="subject-end-date" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject-description">Descrição / Ementa</label>
+                        <textarea id="subject-description" class="form-control" placeholder="Insira detalhes da disciplina, código de turma ou observações..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="btn-cancel-subject">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="btn-save-subject">
+                        <i class="fa-solid fa-floppy-disk"></i> Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         Deletion Confirmation Modal
+         ========================================================================== -->
+    <div class="modal-overlay" id="delete-modal" style="display: none;">
+        <div class="modal-card modal-card-sm">
+            <div class="modal-header" style="border-bottom-color: rgba(239, 68, 68, 0.2);">
+                <h3 style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar Exclusão</h3>
+                <button class="btn-close-modal" id="btn-close-delete-modal" title="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <p style="color:var(--text-main); font-size:0.95rem; line-height:1.5;">
+                    Tem certeza de que deseja excluir a disciplina <strong id="delete-subject-title" style="color:var(--accent-cyan);"></strong>?
+                </p>
+                <p style="color:var(--text-muted); font-size:0.85rem;">
+                    Esta ação removerá o registro permanentemente do EduTrack AI.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="btn-cancel-delete">Cancelar</button>
+                <button type="button" class="btn-danger" id="btn-confirm-delete">
+                    <i class="fa-solid fa-trash-can"></i> Confirmar Exclusão
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Centralized Auth Service -->
+    <script src="../js/auth.js"></script>
+
+    <!-- Subjects Management Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 1. Authentication Guard
+            if (typeof EduTrackAuth === 'undefined' || !EduTrackAuth.isAuthenticated()) {
+                window.location.href = 'auth/login.html';
+                return;
+            }
+
+            // Load User Info into Sidebar
+            try {
+                const user = await EduTrackAuth.getMe();
+                if (user) {
+                    const nameEl = document.getElementById('user-name-sidebar');
+                    const emailEl = document.getElementById('user-email-sidebar');
+                    const avatarEl = document.getElementById('user-avatar-mini');
+
+                    if (nameEl) nameEl.textContent = user.name || user.email || 'Estudante';
+                    if (emailEl) emailEl.textContent = user.email || '';
+                    if (avatarEl) avatarEl.textContent = EduTrackAuth.getInitials(user.name, user.email);
+                }
+            } catch (err) {
+                console.warn('Sessão expirada ou inválida:', err);
+                EduTrackAuth.logout('auth/login.html');
+                return;
+            }
+
+            // Logout Listener
+            const btnLogout = document.getElementById('btn-logout');
+            if (btnLogout) {
+                btnLogout.addEventListener('click', () => EduTrackAuth.logout('auth/login.html'));
+            }
+
+            // 2. DOM Elements
+            const gridEl = document.getElementById('subjects-grid');
+            const emptyStateEl = document.getElementById('empty-state');
+            const countLabelEl = document.getElementById('subjects-count-label');
+            const totalHoursEl = document.getElementById('total-hours-label');
+            const searchInput = document.getElementById('header-search');
+
+            const subjectModal = document.getElementById('subject-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const formSubject = document.getElementById('form-subject');
+            const subjectIdInput = document.getElementById('subject-id');
+            const nameInput = document.getElementById('subject-name');
+            const teacherInput = document.getElementById('subject-teacher');
+            const hoursInput = document.getElementById('subject-hours');
+            const startDateInput = document.getElementById('subject-start-date');
+            const endDateInput = document.getElementById('subject-end-date');
+            const descriptionInput = document.getElementById('subject-description');
+
+            const btnOpenCreate = document.getElementById('btn-open-create-modal');
+            const btnEmptyCreate = document.getElementById('btn-empty-create');
+            const btnCloseModal = document.getElementById('btn-close-modal');
+            const btnCancelSubject = document.getElementById('btn-cancel-subject');
+            const btnSaveSubject = document.getElementById('btn-save-subject');
+
+            const deleteModal = document.getElementById('delete-modal');
+            const deleteTitleEl = document.getElementById('delete-subject-title');
+            const btnCloseDeleteModal = document.getElementById('btn-close-delete-modal');
+            const btnCancelDelete = document.getElementById('btn-cancel-delete');
+            const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+
+            const alertBox = document.getElementById('alert-feedback');
+            const alertIcon = document.getElementById('alert-icon');
+            const alertMessage = document.getElementById('alert-message');
+
+            let subjectsList = [];
+            let deletingSubjectId = null;
+
+            // 3. UI Helpers
+            function showAlert(message, type = 'success') {
+                if (!alertBox) return;
+                alertBox.className = `alert-banner ${type === 'success' ? 'alert-banner-success' : 'alert-banner-error'}`;
+                if (alertIcon) {
+                    alertIcon.className = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+                }
+                if (alertMessage) alertMessage.textContent = message;
+                alertBox.style.display = 'flex';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 4000);
+            }
+
+            function formatDate(dateString) {
+                if (!dateString) return null;
+                try {
+                    // Accepts YYYY-MM-DD or timestamp
+                    const parts = dateString.split('-');
+                    if (parts.length === 3) {
+                        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+                    }
+                    const d = new Date(dateString);
+                    if (isNaN(d.getTime())) return dateString;
+                    return d.toLocaleDateString('pt-BR');
+                } catch (e) {
+                    return dateString;
+                }
+            }
+
+            function openCreateModal() {
+                formSubject.reset();
+                subjectIdInput.value = '';
+                modalTitle.innerHTML = '<i class="fa-solid fa-book-medical" style="color:#53dce3;"></i> Nova Disciplina';
+                subjectModal.style.display = 'flex';
+                nameInput.focus();
+            }
+
+            function openEditModal(subject) {
+                formSubject.reset();
+                subjectIdInput.value = subject.id;
+                modalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square" style="color:#53dce3;"></i> Editar Disciplina';
+                
+                nameInput.value = subject.name || '';
+                teacherInput.value = subject.teacher || '';
+                hoursInput.value = subject.hours !== null && subject.hours !== undefined ? subject.hours : '';
+                startDateInput.value = subject.start_date || '';
+                endDateInput.value = subject.end_date || '';
+                descriptionInput.value = subject.description || '';
+
+                subjectModal.style.display = 'flex';
+                nameInput.focus();
+            }
+
+            function closeModal() {
+                subjectModal.style.display = 'none';
+                formSubject.reset();
+            }
+
+            function openDeleteModal(subject) {
+                deletingSubjectId = subject.id;
+                deleteTitleEl.textContent = subject.name;
+                deleteModal.style.display = 'flex';
+            }
+
+            function closeDeleteModal() {
+                deletingSubjectId = null;
+                deleteModal.style.display = 'none';
+            }
+
+            // 4. API Calls
+            async function fetchSubjects() {
+                try {
+                    const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
+                    const response = await fetch(`${subjectsBaseUrl}/subjects`, {
+                        method: 'GET',
+                        headers: EduTrackAuth.getAuthHeaders()
+                    });
+
+                    if (response.status === 401) {
+                        EduTrackAuth.logout('auth/login.html');
+                        return;
+                    }
+
+                    const data = await response.json();
+                    subjectsList = Array.isArray(data) ? data : [];
+                    renderSubjects();
+                } catch (err) {
+                    console.error('Erro ao buscar disciplinas:', err);
+                    showAlert('Não foi possível carregar a lista de disciplinas.', 'error');
+                }
+            }
+
+            function renderSubjects() {
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const filtered = subjectsList.filter(s => {
+                    const matchName = s.name && s.name.toLowerCase().includes(query);
+                    const matchTeacher = s.teacher && s.teacher.toLowerCase().includes(query);
+                    return matchName || matchTeacher;
+                });
+
+                if (subjectsList.length === 0) {
+                    gridEl.style.display = 'none';
+                    emptyStateEl.style.display = 'flex';
+                    if (countLabelEl) countLabelEl.innerHTML = 'Exibindo <strong>0</strong> disciplinas';
+                    if (totalHoursEl) totalHoursEl.innerHTML = 'Total: <strong>0h</strong> de carga horária';
+                    return;
+                }
+
+                emptyStateEl.style.display = 'none';
+                gridEl.style.display = 'grid';
+
+                const totalHours = subjectsList.reduce((acc, curr) => acc + (Number(curr.hours) || 0), 0);
+                if (countLabelEl) countLabelEl.innerHTML = `Exibindo <strong>${filtered.length}</strong> de <strong>${subjectsList.length}</strong> disciplinas`;
+                if (totalHoursEl) totalHoursEl.innerHTML = `Total: <strong>${totalHours}h</strong> de carga horária`;
+
+                if (filtered.length === 0) {
+                    gridEl.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                            <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 12px; opacity: 0.5;"></i>
+                            <p>Nenhuma disciplina encontrada para "${query}".</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                gridEl.innerHTML = filtered.map(s => {
+                    const hoursBadge = s.hours !== null && s.hours !== undefined && s.hours !== '' 
+                        ? `<span class="subject-badge"><i class="fa-solid fa-clock"></i> ${s.hours}h</span>` 
+                        : '';
+                    
+                    const teacherLine = s.teacher 
+                        ? `<div class="subject-info-item"><i class="fa-solid fa-chalkboard-user"></i> <span>Prof. ${escapeHtml(s.teacher)}</span></div>` 
+                        : '';
+
+                    const formattedStart = formatDate(s.start_date);
+                    const formattedEnd = formatDate(s.end_date);
+
+                    let datesLine = '';
+                    if (formattedStart || formattedEnd) {
+                        const dateText = formattedStart && formattedEnd 
+                            ? `${formattedStart} a ${formattedEnd}` 
+                            : (formattedStart ? `Início: ${formattedStart}` : `Término: ${formattedEnd}`);
+                        datesLine = `<div class="subject-info-item"><i class="fa-solid fa-calendar-days"></i> <span>${dateText}</span></div>`;
+                    }
+
+                    const descBox = s.description 
+                        ? `<div class="subject-description-box"><i class="fa-solid fa-align-left" style="color:var(--accent-lilac); margin-right:4px;"></i> ${escapeHtml(s.description)}</div>` 
+                        : '';
+
+                    return `
+                        <div class="subject-card" data-id="${s.id}">
+                            <div class="subject-card-header">
+                                <h3 class="subject-title">${escapeHtml(s.name)}</h3>
+                                ${hoursBadge}
+                            </div>
+                            <div class="subject-card-body">
+                                ${teacherLine}
+                                ${datesLine}
+                                ${descBox}
+                            </div>
+                            <div class="subject-card-actions">
+                                <button type="button" class="btn-card-action edit-action" onclick="window.editSubject(${s.id})">
+                                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                                </button>
+                                <button type="button" class="btn-card-action delete-action" onclick="window.deleteSubject(${s.id})">
+                                    <i class="fa-solid fa-trash-can"></i> Excluir
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            }
+
+            // Expose Window action handlers
+            window.editSubject = (id) => {
+                const subject = subjectsList.find(s => s.id === id);
+                if (subject) openEditModal(subject);
+            };
+
+            window.deleteSubject = (id) => {
+                const subject = subjectsList.find(s => s.id === id);
+                if (subject) openDeleteModal(subject);
+            };
+
+            // Form Submit Handler (POST / PATCH)
+            formSubject.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const id = subjectIdInput.value;
+                const isEdit = !!id;
+
+                const payload = {
+                    name: nameInput.value.trim(),
+                    teacher: teacherInput.value.trim() || null,
+                    hours: hoursInput.value ? Number(hoursInput.value) : null,
+                    description: descriptionInput.value.trim() || null,
+                    start_date: startDateInput.value || null,
+                    end_date: endDateInput.value || null
+                };
+
+                if (!payload.name) {
+                    showAlert('O nome da disciplina é obrigatório.', 'error');
+                    return;
+                }
+
+                btnSaveSubject.disabled = true;
+                btnSaveSubject.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+                try {
+                    const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
+                    const url = isEdit 
+                        ? `${subjectsBaseUrl}/subjects/${id}` 
+                        : `${subjectsBaseUrl}/subjects`;
+                    
+                    const method = isEdit ? 'PATCH' : 'POST';
+
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: EduTrackAuth.getAuthHeaders(),
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error(errData.message || errData.error || 'Erro ao salvar disciplina.');
+                    }
+
+                    showAlert(`Disciplina ${isEdit ? 'atualizada' : 'criada'} com sucesso!`, 'success');
+                    closeModal();
+                    await fetchSubjects();
+                } catch (err) {
+                    console.error('Erro ao salvar disciplina:', err);
+                    showAlert(err.message || 'Falha ao salvar disciplina.', 'error');
+                } finally {
+                    btnSaveSubject.disabled = false;
+                    btnSaveSubject.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar';
+                }
+            });
+
+            // Confirm Delete Handler (DELETE)
+            btnConfirmDelete.addEventListener('click', async () => {
+                if (!deletingSubjectId) return;
+
+                btnConfirmDelete.disabled = true;
+                btnConfirmDelete.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Excluindo...';
+
+                try {
+                    const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
+                    const response = await fetch(`${subjectsBaseUrl}/subjects/${deletingSubjectId}`, {
+                        method: 'DELETE',
+                        headers: EduTrackAuth.getAuthHeaders()
+                    });
+
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error(errData.message || errData.error || 'Erro ao excluir disciplina.');
+                    }
+
+                    showAlert('Disciplina excluída com sucesso!', 'success');
+                    closeDeleteModal();
+                    await fetchSubjects();
+                } catch (err) {
+                    console.error('Erro ao excluir disciplina:', err);
+                    showAlert(err.message || 'Falha ao excluir disciplina.', 'error');
+                } finally {
+                    btnConfirmDelete.disabled = false;
+                    btnConfirmDelete.innerHTML = '<i class="fa-solid fa-trash-can"></i> Confirmar Exclusão';
+                }
+            });
+
+            // Event Listeners for Modals
+            if (btnOpenCreate) btnOpenCreate.addEventListener('click', openCreateModal);
+            if (btnEmptyCreate) btnEmptyCreate.addEventListener('click', openCreateModal);
+            if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
+            if (btnCancelSubject) btnCancelSubject.addEventListener('click', closeModal);
+
+            if (btnCloseDeleteModal) btnCloseDeleteModal.addEventListener('click', closeDeleteModal);
+            if (btnCancelDelete) btnCancelDelete.addEventListener('click', closeDeleteModal);
+
+            if (searchInput) searchInput.addEventListener('input', renderSubjects);
+
+            // Initial Fetch
+            await fetchSubjects();
+        });
+    </script>
+</body>
+</html>

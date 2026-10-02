@@ -11,6 +11,9 @@ table subjects {
     text name
     text teacher?
     int hours?
+    text description?
+    date start_date?
+    date end_date?
   
     // Reference to the authenticated user
     int user_id {
