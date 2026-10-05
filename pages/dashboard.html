@@ -105,20 +105,20 @@
                         <i class="fa-solid fa-trophy"></i> Progresso Geral
                     </div>
                     <h2>Progresso Geral de Tarefas</h2>
-                    <p>Você concluiu <strong>14 de 20 tarefas</strong> planejadas.</p>
+                    <p id="progress-summary-text">Você concluiu <strong>0 de 0 tarefas</strong> planejadas.</p>
 
                     <div class="progress-bar-container">
-                        <div class="progress-bar-fill" style="width: 70%;"></div>
+                        <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
                     </div>
 
                     <div class="progress-stats">
                         <div class="stat-item completed">
                             <i class="fa-solid fa-circle-check"></i>
-                            <span><strong>14</strong> Concluídas</span>
+                            <span id="stat-completed-count"><strong>0</strong> Concluídas</span>
                         </div>
                         <div class="stat-item pending">
                             <i class="fa-solid fa-clock"></i>
-                            <span><strong>6</strong> Pendentes</span>
+                            <span id="stat-pending-count"><strong>0</strong> Pendentes</span>
                         </div>
                     </div>
                 </div>
@@ -133,9 +133,9 @@
                             </linearGradient>
                         </defs>
                         <circle class="circle-bg" cx="45" cy="45" r="38"></circle>
-                        <circle class="circle-fill" cx="45" cy="45" r="38"></circle>
+                        <circle class="circle-fill" id="circle-fill-path" cx="45" cy="45" r="38"></circle>
                     </svg>
-                    <span class="circle-text">70%</span>
+                    <span class="circle-text" id="progress-circle-text">0%</span>
                 </div>
             </section>
 
@@ -147,7 +147,7 @@
                     </div>
                     <div class="metric-info">
                         <h3>Disciplinas</h3>
-                        <div class="metric-value">6</div>
+                        <div class="metric-value" id="metric-subjects-count">0</div>
                         <div class="metric-subtext">Ativas no semestre</div>
                     </div>
                 </article>
@@ -158,8 +158,8 @@
                     </div>
                     <div class="metric-info">
                         <h3>Tarefas Pendentes</h3>
-                        <div class="metric-value">6</div>
-                        <div class="metric-subtext">2 com prazo próximo</div>
+                        <div class="metric-value" id="metric-pending-count">0</div>
+                        <div class="metric-subtext">Prazo futuro ou próximo</div>
                     </div>
                 </article>
 
@@ -169,8 +169,8 @@
                     </div>
                     <div class="metric-info">
                         <h3>Tempo Estimado</h3>
-                        <div class="metric-value">14,5h</div>
-                        <div class="metric-subtext">Tempo estimado total</div>
+                        <div class="metric-value" id="metric-estimated-time">0h</div>
+                        <div class="metric-subtext">Tarefas concluídas</div>
                     </div>
                 </article>
             </section>
@@ -180,58 +180,15 @@
                 <div class="chart-header">
                     <div class="chart-title">
                         <h3>Tempo de Estudo por Disciplina</h3>
-                        <p>Horas estimadas com base nas tarefas cadastradas</p>
+                        <p>Horas estimadas com base nas tarefas concluídas</p>
                     </div>
                     <div class="chart-badge">
                         <i class="fa-solid fa-chart-simple"></i> Visão por Disciplina
                     </div>
                 </div>
 
-                <div class="chart-container">
-                    <!-- Bar 1: Cálculo II -->
-                    <div class="chart-bar-group">
-                        <div class="bar-wrapper">
-                            <span class="bar-tooltip">5.5h</span>
-                            <div class="bar-fill cyan" style="height: 90%;"></div>
-                        </div>
-                        <span class="bar-label">Cálculo II</span>
-                    </div>
-
-                    <!-- Bar 2: Algoritmos -->
-                    <div class="chart-bar-group">
-                        <div class="bar-wrapper">
-                            <span class="bar-tooltip">4.0h</span>
-                            <div class="bar-fill lilac" style="height: 68%;"></div>
-                        </div>
-                        <span class="bar-label">Algoritmos</span>
-                    </div>
-
-                    <!-- Bar 3: Banco de Dados -->
-                    <div class="chart-bar-group">
-                        <div class="bar-wrapper">
-                            <span class="bar-tooltip">3.2h</span>
-                            <div class="bar-fill cyan" style="height: 52%;"></div>
-                        </div>
-                        <span class="bar-label">Banco Dados</span>
-                    </div>
-
-                    <!-- Bar 4: Eng. Software -->
-                    <div class="chart-bar-group">
-                        <div class="bar-wrapper">
-                            <span class="bar-tooltip">2.8h</span>
-                            <div class="bar-fill lilac" style="height: 45%;"></div>
-                        </div>
-                        <span class="bar-label">Eng. Software</span>
-                    </div>
-
-                    <!-- Bar 5: Redes -->
-                    <div class="chart-bar-group">
-                        <div class="bar-wrapper">
-                            <span class="bar-tooltip">1.5h</span>
-                            <div class="bar-fill cyan" style="height: 25%;"></div>
-                        </div>
-                        <span class="bar-label">Redes</span>
-                    </div>
+                <div class="chart-container" id="study-chart-container">
+                    <!-- Dynamic chart bars rendered via JavaScript -->
                 </div>
             </section>
 
@@ -258,59 +215,11 @@
             <div class="tasks-panel">
                 <div class="section-header">
                     <h3>Próximas tarefas</h3>
-                    <a href="../tarefas.html">Ver todas</a>
+                    <a href="../pages/tasks.html">Ver todas</a>
                 </div>
 
-                <div class="upcoming-tasks-list">
-
-                    <!-- Task Item 1 -->
-                    <article class="task-item-card">
-                        <i class="fa-regular fa-square task-status-icon"></i>
-                        <div class="task-details">
-                            <h4 class="task-title">Trabalho de Cálculo II</h4>
-                            <div class="task-meta">
-                                <span class="task-date"><i class="fa-regular fa-calendar"></i> Amanhã, 23:59</span>
-                                <span class="task-tag urgent">Cálculo</span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Task Item 2 -->
-                    <article class="task-item-card">
-                        <i class="fa-regular fa-square task-status-icon"></i>
-                        <div class="task-details">
-                            <h4 class="task-title">Relatório de Banco de Dados</h4>
-                            <div class="task-meta">
-                                <span class="task-date"><i class="fa-regular fa-calendar"></i> 25/09, 18:00</span>
-                                <span class="task-tag cyan">BD</span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Task Item 3 -->
-                    <article class="task-item-card">
-                        <i class="fa-regular fa-square task-status-icon"></i>
-                        <div class="task-details">
-                            <h4 class="task-title">Exercícios de Algoritmos</h4>
-                            <div class="task-meta">
-                                <span class="task-date"><i class="fa-regular fa-calendar"></i> 27/09, 23:59</span>
-                                <span class="task-tag lilac">Algoritmos</span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Task Item 4 -->
-                    <article class="task-item-card">
-                        <i class="fa-regular fa-square task-status-icon"></i>
-                        <div class="task-details">
-                            <h4 class="task-title">Quiz de Eng. de Software</h4>
-                            <div class="task-meta">
-                                <span class="task-date"><i class="fa-regular fa-calendar"></i> 29/09, 12:00</span>
-                                <span class="task-tag cyan">Eng. SW</span>
-                            </div>
-                        </div>
-                    </article>
-
+                <div class="upcoming-tasks-list" id="upcoming-tasks-container">
+                    <!-- Dynamic upcoming tasks rendered via JavaScript -->
                 </div>
             </div>
 

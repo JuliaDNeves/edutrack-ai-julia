@@ -344,10 +344,212 @@ document.addEventListener('DOMContentLoaded', async () => {
             const avatarLarge = document.getElementById('user-avatar-large');
             if (avatarLarge) avatarLarge.textContent = initials;
 
+            // Hydrate Dashboard Real Data from Xano APIs
+            await hydrateDashboardData();
+
         } catch (err) {
             console.error('Sessão inválida ou expirada:', err);
             EduTrackAuth.logout(getAuthLoginUrl());
         }
+    }
+
+    async function hydrateDashboardData() {
+        try {
+            const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
+            const tasksBaseUrl = EduTrackAuth.XANO_TASKS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:8PdLH3Ls';
+
+            const [subjectsRes, tasksRes] = await Promise.all([
+                fetch(`${subjectsBaseUrl}/subjects`, { headers: EduTrackAuth.getAuthHeaders() }),
+                fetch(`${tasksBaseUrl}/academic_tasks`, { headers: EduTrackAuth.getAuthHeaders() })
+            ]);
+
+            const subjectsData = subjectsRes.ok ? await subjectsRes.json() : [];
+            const tasksData = tasksRes.ok ? await tasksRes.json() : [];
+
+            const subjects = Array.isArray(subjectsData) ? subjectsData : [];
+            const tasks = Array.isArray(tasksData) ? tasksData : [];
+
+            // 1. Task Progress Calculation
+            const completedTasks = tasks.filter(t => t.status === 'completed');
+            const pendingTasks = tasks.filter(t => t.status === 'pending');
+            const totalTasks = tasks.length;
+            const percentage = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0;
+
+            const progressTextEl = document.getElementById('progress-summary-text');
+            if (progressTextEl) {
+                progressTextEl.innerHTML = `Você concluiu <strong>${completedTasks.length} de ${totalTasks} tarefas</strong> planejadas.`;
+            }
+
+            const progressBarFillEl = document.getElementById('progress-bar-fill');
+            if (progressBarFillEl) {
+                progressBarFillEl.style.width = `${percentage}%`;
+            }
+
+            const statCompletedCountEl = document.getElementById('stat-completed-count');
+            if (statCompletedCountEl) {
+                statCompletedCountEl.innerHTML = `<strong>${completedTasks.length}</strong> Concluídas`;
+            }
+
+            const statPendingCountEl = document.getElementById('stat-pending-count');
+            if (statPendingCountEl) {
+                statPendingCountEl.innerHTML = `<strong>${pendingTasks.length}</strong> Pendentes`;
+            }
+
+            const circleTextEl = document.getElementById('progress-circle-text');
+            if (circleTextEl) {
+                circleTextEl.textContent = `${percentage}%`;
+            }
+
+            const circleFillPathEl = document.getElementById('circle-fill-path');
+            if (circleFillPathEl) {
+                // Circumference for r=38 is 2 * PI * 38 ≈ 238.76
+                const circumference = 238.76;
+                const dashOffset = circumference - (circumference * percentage) / 100;
+                circleFillPathEl.style.strokeDasharray = `${circumference}`;
+                circleFillPathEl.style.strokeDashoffset = `${dashOffset}`;
+            }
+
+            // 2. Metrics Cards
+            const metricSubjectsEl = document.getElementById('metric-subjects-count');
+            if (metricSubjectsEl) {
+                metricSubjectsEl.textContent = subjects.length;
+            }
+
+            const metricPendingEl = document.getElementById('metric-pending-count');
+            if (metricPendingEl) {
+                metricPendingEl.textContent = pendingTasks.length;
+            }
+
+            // Estimated time calculated ONLY for completed tasks
+            const completedMinutesTotal = completedTasks.reduce((sum, t) => sum + (Number(t.estimated_time) || 0), 0);
+            const metricEstimatedEl = document.getElementById('metric-estimated-time');
+            if (metricEstimatedEl) {
+                metricEstimatedEl.textContent = formatHoursMinutes(completedMinutesTotal);
+            }
+
+            // 3. Study Time per Subject Chart
+            const chartContainerEl = document.getElementById('study-chart-container');
+            if (chartContainerEl) {
+                if (subjects.length === 0) {
+                    chartContainerEl.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 24px; color: var(--text-muted);">
+                            <i class="fa-solid fa-book-open" style="font-size: 1.5rem; margin-bottom: 8px; opacity: 0.5;"></i>
+                            <p>Nenhuma disciplina cadastrada.</p>
+                        </div>
+                    `;
+                } else {
+                    const subjectTimes = subjects.map(s => {
+                        const sTasks = completedTasks.filter(t => Number(t.subject_id) === Number(s.id));
+                        const totalMins = sTasks.reduce((sum, t) => sum + (Number(t.estimated_time) || 0), 0);
+                        return {
+                            id: s.id,
+                            name: s.name,
+                            minutes: totalMins,
+                            hours: totalMins / 60
+                        };
+                    });
+
+                    const maxHours = Math.max(...subjectTimes.map(st => st.hours), 1);
+
+                    chartContainerEl.innerHTML = subjectTimes.map((st, idx) => {
+                        const fillPercent = st.hours > 0 ? Math.min(Math.max(Math.round((st.hours / maxHours) * 90), 15), 90) : 0;
+                        const colorClass = idx % 2 === 0 ? 'cyan' : 'lilac';
+                        const labelHours = formatHoursMinutes(st.minutes);
+
+                        return `
+                            <div class="chart-bar-group">
+                                <div class="bar-wrapper">
+                                    <span class="bar-tooltip">${labelHours}</span>
+                                    <div class="bar-fill ${colorClass}" style="height: ${fillPercent}%;"></div>
+                                </div>
+                                <span class="bar-label" title="${escapeHtml(st.name)}">${escapeHtml(st.name)}</span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            // 4. Upcoming Tasks Side Panel
+            const upcomingContainerEl = document.getElementById('upcoming-tasks-container');
+            if (upcomingContainerEl) {
+                // Map subjects for quick name lookup
+                const subjectsMap = new Map();
+                subjects.forEach(s => subjectsMap.set(Number(s.id), s.name));
+
+                // Sort pending tasks by due_date ascending (closest deadline first)
+                const sortedPending = [...pendingTasks].sort((a, b) => {
+                    if (!a.due_date) return 1;
+                    if (!b.due_date) return -1;
+                    return new Date(a.due_date) - new Date(b.due_date);
+                });
+
+                const upcomingList = sortedPending.slice(0, 6);
+
+                if (upcomingList.length === 0) {
+                    upcomingContainerEl.innerHTML = `
+                        <div style="text-align: center; padding: 20px 10px; color: var(--text-muted); font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-check" style="font-size: 1.5rem; margin-bottom: 8px; color: var(--accent-cyan);"></i>
+                            <p>Nenhuma tarefa pendente!</p>
+                        </div>
+                    `;
+                } else {
+                    upcomingContainerEl.innerHTML = upcomingList.map((t, idx) => {
+                        const subjectName = subjectsMap.get(Number(t.subject_id)) || 'Geral';
+                        const tagClass = idx % 2 === 0 ? 'cyan' : 'lilac';
+                        const formattedDate = formatDueDateString(t.due_date);
+
+                        return `
+                            <article class="task-item-card">
+                                <i class="fa-regular fa-square task-status-icon"></i>
+                                <div class="task-details">
+                                    <h4 class="task-title">${escapeHtml(t.title)}</h4>
+                                    <div class="task-meta">
+                                        <span class="task-date"><i class="fa-regular fa-calendar"></i> ${formattedDate}</span>
+                                        <span class="task-tag ${tagClass}">${escapeHtml(subjectName)}</span>
+                                    </div>
+                                </div>
+                            </article>
+                        `;
+                    }).join('');
+                }
+            }
+
+        } catch (err) {
+            console.error('Erro ao carregar dados do Dashboard:', err);
+        }
+    }
+
+    function formatHoursMinutes(totalMinutes) {
+        if (!totalMinutes || totalMinutes <= 0) return '0h';
+        const hrs = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+        if (hrs === 0) return `${mins}min`;
+        if (mins === 0) return `${hrs}h`;
+        return `${hrs}h ${mins}min`;
+    }
+
+    function formatDueDateString(dateString) {
+        if (!dateString) return 'Sem data';
+        try {
+            const parts = String(dateString).split('T')[0].split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}`;
+            }
+            const d = new Date(dateString);
+            if (isNaN(d.getTime())) return dateString;
+            return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
     }
 
     // ==========================================================================
