@@ -1,9 +1,6 @@
-# landing-page-nav Specification
+# Spec Delta
 
-## Purpose
-Define a estrutura simplificada de botões e ações de navegação da página inicial (index.html) do EduTrack.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Clean top header navigation
 The system SHALL display only the EduTrack brand logo and title in a discrete top position on index.html without creating a traditional navbar header container or navigation menu links.
@@ -20,6 +17,8 @@ The system SHALL display main authentication action buttons in the hero section 
 - **WHEN** user views hero section on index.html
 - **THEN** system SHALL render "Entrar" action button pointing to pages/auth/login.html
 - **THEN** system SHALL render "Criar conta" action button pointing to pages/auth/register.html
+
+## ADDED Requirements
 
 ### Requirement: Asymmetrical hero two column layout
 The system SHALL organize the index.html hero section into an asymmetrical two-column layout on desktop viewports, featuring text and actions on the left and an integrated abstract learning visualization on the right.

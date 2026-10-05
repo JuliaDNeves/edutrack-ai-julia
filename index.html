@@ -18,38 +18,90 @@
          Landing Page Presentation
          ========================================================================== -->
     <div class="landing-page-wrapper">
-        <!-- Landing Header Navigation -->
-        <header class="landing-header">
+        <!-- Discrete Top Brand Bar (No Navbar) -->
+        <div class="top-brand-bar">
             <div class="brand">
                 <div class="brand-icon">
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <span class="brand-title">EduTrack</span>
             </div>
-        </header>
+        </div>
 
-        <!-- Landing Hero Section -->
+        <!-- Asymmetrical Hero Section -->
         <main class="landing-hero-container">
-            <div class="landing-hero-content">
-                <div class="hero-badge">
-                    <i class="fa-solid fa-sparkles"></i> Gestão Acadêmica Inteligente
-                </div>
-                
-                <h1 class="hero-title">
-                    Organize seus estudos e <span class="gradient-text">alcance seus objetivos</span>
-                </h1>
-                
-                <p class="hero-subtitle">
-                    Sua rotina acadêmica centralizada em um só lugar. Acompanhe disciplinas, tarefas e tempo estimado de estudo com clareza e controle total.
-                </p>
+            <div class="hero-asymmetric-wrapper">
+                <!-- Left Column: Primary Copy & Actions -->
+                <div class="hero-left-content">
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-sparkles"></i> Gestão Acadêmica Inteligente
+                    </div>
+                    
+                    <h1 class="hero-title">
+                        Organize seus estudos e <span class="gradient-text">alcance seus objetivos</span>
+                    </h1>
+                    
+                    <p class="hero-subtitle">
+                        Sua rotina acadêmica centralizada em um só lugar. Acompanhe disciplinas, tarefas e tempo estimado de estudo com clareza e controle total.
+                    </p>
 
-                <div class="hero-cta-group">
-                    <a href="pages/auth/login.html" class="auth-btn-primary hero-btn">
-                        <i class="fa-solid fa-right-to-bracket"></i> Acessar minha conta
-                    </a>
-                    <a href="pages/auth/register.html" class="auth-btn-secondary hero-btn">
-                        <i class="fa-solid fa-user-plus"></i> Criar conta
-                    </a>
+                    <div class="hero-cta-group">
+                        <a href="pages/auth/login.html" class="auth-btn-primary hero-btn">
+                            <i class="fa-solid fa-right-to-bracket"></i> Entrar
+                        </a>
+                        <a href="pages/auth/register.html" class="auth-btn-secondary hero-btn">
+                            <i class="fa-solid fa-user-plus"></i> Criar conta
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Abstract Academic Knowledge Visualization -->
+                <div class="hero-right-visual">
+                    <div class="knowledge-visual-container">
+                        <!-- Background Glows -->
+                        <div class="visual-glow cyan-glow"></div>
+                        <div class="visual-glow lilac-glow"></div>
+                        
+                        <!-- Core & Orbit Structure -->
+                        <div class="knowledge-core-wrapper">
+                            <!-- Outer Orbit Ring with Rotating Orbit Icons -->
+                            <div class="orbit-ring ring-outer">
+                                <div class="orbit-icon icon-cyan pos-outer-1" title="Disciplinas">
+                                    <i class="fa-solid fa-book-bookmark"></i>
+                                </div>
+                                <div class="orbit-icon icon-lilac pos-outer-2" title="Tarefas">
+                                    <i class="fa-solid fa-list-check"></i>
+                                </div>
+                                <div class="orbit-icon icon-cyan pos-outer-3" title="Prazos">
+                                    <i class="fa-solid fa-calendar-days"></i>
+                                </div>
+                            </div>
+
+                            <!-- Inner Orbit Ring with Counter-Rotating Orbit Icons -->
+                            <div class="orbit-ring ring-inner">
+                                <div class="orbit-icon icon-lilac pos-inner-1" title="Anotações">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </div>
+                                <div class="orbit-icon icon-cyan pos-inner-2" title="Progresso">
+                                    <i class="fa-solid fa-chart-pie"></i>
+                                </div>
+                                <div class="orbit-icon icon-lilac pos-inner-3" title="Tempo de Estudo">
+                                    <i class="fa-solid fa-hourglass-half"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Central Knowledge Core -->
+                            <div class="knowledge-core">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+
+                            <!-- Floating Ambient Particles -->
+                            <div class="particle p1"></div>
+                            <div class="particle p2"></div>
+                            <div class="particle p3"></div>
+                            <div class="particle p4"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
