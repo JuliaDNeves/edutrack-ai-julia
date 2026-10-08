@@ -497,12 +497,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const subjectName = subjectsMap.get(Number(t.subject_id)) || 'Geral';
                         const tagClass = idx % 2 === 0 ? 'cyan' : 'lilac';
                         const formattedDate = formatDueDateString(t.due_date);
+                        const isCompleted = t.status === 'completed';
 
                         return `
-                            <article class="task-item-card">
-                                <i class="fa-regular fa-square task-status-icon"></i>
+                            <article class="task-item-card ${isCompleted ? 'completed' : ''}" data-id="${t.id}">
+                                <i class="${isCompleted ? 'fa-solid fa-square-check' : 'fa-regular fa-square'} task-status-icon"
+                                   style="cursor: pointer; ${isCompleted ? 'color: #53dce3;' : ''}"
+                                   title="${isCompleted ? 'Marcar como pendente' : 'Marcar como concluída'}"
+                                   onclick="window.toggleDashboardTaskStatus(${t.id}, '${isCompleted ? 'pending' : 'completed'}', this)"></i>
                                 <div class="task-details">
-                                    <h4 class="task-title">${escapeHtml(t.title)}</h4>
+                                    <h4 class="task-title" style="${isCompleted ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${escapeHtml(t.title)}</h4>
                                     <div class="task-meta">
                                         <span class="task-date"><i class="fa-regular fa-calendar"></i> ${formattedDate}</span>
                                         <span class="task-tag ${tagClass}">${escapeHtml(subjectName)}</span>
@@ -518,6 +522,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Erro ao carregar dados do Dashboard:', err);
         }
     }
+
+    // Interactive Handler for Dashboard Task Completion Checkbox
+    window.toggleDashboardTaskStatus = async (taskId, targetStatus, iconEl) => {
+        if (!taskId) return;
+
+        if (iconEl) {
+            iconEl.style.pointerEvents = 'none';
+            iconEl.className = 'fa-solid fa-spinner fa-spin task-status-icon';
+        }
+
+        try {
+            const tasksBaseUrl = EduTrackAuth.XANO_TASKS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:8PdLH3Ls';
+            const response = await fetch(`${tasksBaseUrl}/academic_tasks/${taskId}`, {
+                method: 'PATCH',
+                headers: EduTrackAuth.getAuthHeaders(),
+                body: JSON.stringify({ status: targetStatus })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.message || errData.error || 'Erro ao atualizar tarefa no Xano.');
+            }
+
+            // Instantly recalculate all Dashboard metrics & UI
+            await hydrateDashboardData();
+        } catch (err) {
+            console.error('Erro ao alternar status da tarefa no Dashboard:', err);
+            if (iconEl) {
+                iconEl.style.pointerEvents = 'auto';
+                iconEl.className = targetStatus === 'completed' ? 'fa-regular fa-square task-status-icon' : 'fa-solid fa-square-check task-status-icon';
+            }
+        }
+    };
 
     function formatHoursMinutes(totalMinutes) {
         if (!totalMinutes || totalMinutes <= 0) return '0h';

@@ -203,23 +203,56 @@
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
         }
 
-        /* Tasks Grid & Card Layout */
+        /* Tasks Grid & Grouped Layout */
         .tasks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
             margin-top: 24px;
+        }
+
+        .tasks-group-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .tasks-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tasks-group-header .group-count {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .tasks-subgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 14px;
         }
 
         .task-card {
             background: var(--gradient-card);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 20px;
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 16px;
+            gap: 10px;
             transition: var(--transition);
             position: relative;
             overflow: hidden;
@@ -227,7 +260,7 @@
 
         .task-card:hover {
             border-color: rgba(83, 220, 227, 0.3);
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: var(--shadow-card);
         }
 
@@ -247,29 +280,105 @@
             opacity: 1;
         }
 
-        .task-card-header {
+        /* Attenuated styling for completed task cards */
+        .task-card.task-card-completed {
+            opacity: 0.82;
+            background: rgba(18, 24, 36, 0.55);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+
+        .task-card.task-card-completed:hover {
+            opacity: 1;
+            border-color: rgba(16, 185, 129, 0.45);
+        }
+
+        .task-card-top {
             display: flex;
             align-items: flex-start;
-            justify-content: space-between;
             gap: 12px;
         }
 
+        /* Interactive Checkbox */
+        .task-checkbox-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-top: 2px;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox-wrapper input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .task-checkbox-wrapper:hover .custom-checkbox {
+            border-color: var(--accent-cyan);
+            background: rgba(83, 220, 227, 0.1);
+        }
+
+        .task-checkbox-wrapper input:checked ~ .custom-checkbox {
+            background: #10b981;
+            border-color: #10b981;
+            color: #ffffff;
+        }
+
+        .task-title-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
         .task-title {
-            font-size: 1.15rem;
+            font-size: 1.02rem;
             font-weight: 700;
             color: var(--text-main);
-            line-height: 1.3;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .task-title.completed-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .task-tags-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .status-badge {
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             white-space: nowrap;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .status-badge-pending {
@@ -290,7 +399,7 @@
             border: 1px solid rgba(83, 220, 227, 0.2);
             padding: 2px 8px;
             border-radius: var(--radius-sm);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
@@ -298,12 +407,13 @@
             width: fit-content;
         }
 
-        .task-card-body {
+        .task-card-body-compact {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            font-size: 0.9rem;
+            gap: 6px;
+            font-size: 0.85rem;
             color: var(--text-muted);
+            margin-top: 2px;
         }
 
         .task-info-item {
@@ -321,21 +431,22 @@
         .task-description-box {
             background: rgba(255, 255, 255, 0.02);
             border-radius: var(--radius-sm);
-            padding: 10px 12px;
+            padding: 8px 10px;
             border: 1px solid rgba(255, 255, 255, 0.04);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             line-height: 1.4;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
-        .task-card-actions {
+        .task-card-actions-compact {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 10px;
-            padding-top: 14px;
-            border-top: 1px solid var(--border-color);
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 4px;
         }
 
         .btn-card-action {
@@ -343,14 +454,14 @@
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             border-radius: var(--radius-sm);
-            padding: 6px 12px;
-            font-size: 0.85rem;
+            padding: 5px 10px;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .btn-card-action:hover {
@@ -902,7 +1013,7 @@
                 }
 
                 emptyStateEl.style.display = 'none';
-                gridEl.style.display = 'grid';
+                gridEl.style.display = 'flex';
 
                 const totalEstimatedMinutes = tasksList.reduce((acc, curr) => acc + (Number(curr.estimated_time) || 0), 0);
                 if (countLabelEl) countLabelEl.innerHTML = `Exibindo <strong>${filtered.length}</strong> de <strong>${tasksList.length}</strong> tarefas`;
@@ -910,7 +1021,7 @@
 
                 if (filtered.length === 0) {
                     gridEl.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <div style="text-align: center; padding: 40px; color: var(--text-muted); width: 100%;">
                             <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 12px; opacity: 0.5;"></i>
                             <p>Nenhuma tarefa encontrada para "${query}".</p>
                         </div>
@@ -918,57 +1029,106 @@
                     return;
                 }
 
-                gridEl.innerHTML = filtered.map(t => {
-                    const statusClass = t.status === 'completed' ? 'status-badge-completed' : 'status-badge-pending';
-                    const statusText = t.status === 'completed' ? 'Concluída' : 'Pendente';
-                    const statusIcon = t.status === 'completed' ? 'fa-circle-check' : 'fa-clock';
+                const completedTasks = filtered.filter(t => t.status === 'completed');
+                const pendingTasks = filtered.filter(t => t.status === 'pending');
 
-                    const statusBadge = `<span class="status-badge ${statusClass}"><i class="fa-solid ${statusIcon}"></i> ${statusText}</span>`;
+                let html = '';
 
-                    const subjectName = subjectsMap.get(t.subject_id) || `Disciplina #${t.subject_id}`;
-                    const subjectTag = `<span class="task-subject-tag"><i class="fa-solid fa-book"></i> ${escapeHtml(subjectName)}</span>`;
-
-                    const formattedDueDate = formatDate(t.due_date);
-                    const dueDateLine = formattedDueDate
-                        ? `<div class="task-info-item"><i class="fa-solid fa-calendar-days"></i> <span>Entrega: ${formattedDueDate}</span></div>`
-                        : '';
-
-                    const estimatedText = formatTimeMinutes(t.estimated_time);
-                    const spentText = t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '' 
-                        ? formatTimeMinutes(t.spent_time) 
-                        : null;
-
-                    const timeLine = `<div class="task-info-item"><i class="fa-solid fa-hourglass-half"></i> <span>Estimado: ${estimatedText}${spentText ? ` | Gasto: ${spentText}` : ''}</span></div>`;
-
-                    const descBox = t.description 
-                        ? `<div class="task-description-box"><i class="fa-solid fa-align-left" style="color:var(--accent-lilac); margin-right:4px;"></i> ${escapeHtml(t.description)}</div>` 
-                        : '';
-
-                    return `
-                        <div class="task-card" data-id="${t.id}">
-                            <div class="task-card-header">
-                                <h3 class="task-title">${escapeHtml(t.title)}</h3>
-                                ${statusBadge}
+                // 1. Tarefas Pendentes
+                html += `
+                    <section class="tasks-group-section">
+                        <div class="tasks-group-header">
+                            <i class="fa-solid fa-clock" style="color: #fbbf24;"></i>
+                            <span>Pendentes</span>
+                            <span class="group-count">${pendingTasks.length}</span>
+                        </div>
+                        ${pendingTasks.length > 0 ? `
+                            <div class="tasks-subgrid">
+                                ${pendingTasks.map(t => renderTaskCardHtml(t)).join('')}
                             </div>
-                            <div>
-                                ${subjectTag}
+                        ` : `
+                            <p style="color: var(--text-muted); font-size: 0.88rem; padding: 8px 0; font-style: italic;">Nenhuma tarefa pendente!</p>
+                        `}
+                    </section>
+                `;
+
+                // 2. Tarefas Concluídas
+                html += `
+                    <section class="tasks-group-section">
+                        <div class="tasks-group-header">
+                            <i class="fa-solid fa-circle-check" style="color: #34d399;"></i>
+                            <span>Concluídas</span>
+                            <span class="group-count">${completedTasks.length}</span>
+                        </div>
+                        ${completedTasks.length > 0 ? `
+                            <div class="tasks-subgrid">
+                                ${completedTasks.map(t => renderTaskCardHtml(t)).join('')}
                             </div>
-                            <div class="task-card-body">
-                                ${dueDateLine}
-                                ${timeLine}
-                                ${descBox}
-                            </div>
-                            <div class="task-card-actions">
-                                <button type="button" class="btn-card-action edit-action" onclick="window.editTask(${t.id})">
-                                    <i class="fa-solid fa-pen-to-square"></i> Editar
-                                </button>
-                                <button type="button" class="btn-card-action delete-action" onclick="window.deleteTask(${t.id})">
-                                    <i class="fa-solid fa-trash-can"></i> Excluir
-                                </button>
+                        ` : `
+                            <p style="color: var(--text-muted); font-size: 0.88rem; padding: 8px 0; font-style: italic;">Nenhuma tarefa concluída nesta visão.</p>
+                        `}
+                    </section>
+                `;
+
+                gridEl.innerHTML = html;
+            }
+
+            function renderTaskCardHtml(t) {
+                const isCompleted = t.status === 'completed';
+                const statusClass = isCompleted ? 'status-badge-completed' : 'status-badge-pending';
+                const statusText = isCompleted ? 'Concluída' : 'Pendente';
+                const statusIcon = isCompleted ? 'fa-circle-check' : 'fa-clock';
+
+                const statusBadge = `<span class="status-badge ${statusClass}"><i class="fa-solid ${statusIcon}"></i> ${statusText}</span>`;
+                const subjectName = subjectsMap.get(t.subject_id) || `Disciplina #${t.subject_id}`;
+                const subjectTag = `<span class="task-subject-tag"><i class="fa-solid fa-book"></i> ${escapeHtml(subjectName)}</span>`;
+
+                const formattedDueDate = formatDate(t.due_date);
+                const dueDateLine = formattedDueDate
+                    ? `<div class="task-info-item"><i class="fa-solid fa-calendar-days"></i> <span>Entrega: ${formattedDueDate}</span></div>`
+                    : '';
+
+                const estimatedText = formatTimeMinutes(t.estimated_time);
+                const spentText = t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '' 
+                    ? formatTimeMinutes(t.spent_time) 
+                    : null;
+
+                const timeLine = `<div class="task-info-item"><i class="fa-solid fa-hourglass-half"></i> <span>Estimado: ${estimatedText}${spentText ? ` | Gasto: ${spentText}` : ''}</span></div>`;
+
+                const descBox = t.description 
+                    ? `<div class="task-description-box"><i class="fa-solid fa-align-left" style="color:var(--accent-lilac); margin-right:4px;"></i> ${escapeHtml(t.description)}</div>` 
+                    : '';
+
+                return `
+                    <div class="task-card ${isCompleted ? 'task-card-completed' : ''}" data-id="${t.id}">
+                        <div class="task-card-top">
+                            <label class="task-checkbox-wrapper" title="${isCompleted ? 'Marcar como pendente' : 'Marcar como concluída'}">
+                                <input type="checkbox" ${isCompleted ? 'checked' : ''} onchange="window.toggleTaskStatus(${t.id}, this.checked)">
+                                <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+                            </label>
+                            <div class="task-title-group">
+                                <h3 class="task-title ${isCompleted ? 'completed-title' : ''}">${escapeHtml(t.title)}</h3>
+                                <div class="task-tags-row">
+                                    ${subjectTag}
+                                    ${statusBadge}
+                                </div>
                             </div>
                         </div>
-                    `;
-                }).join('');
+                        <div class="task-card-body-compact">
+                            ${dueDateLine}
+                            ${timeLine}
+                            ${descBox}
+                        </div>
+                        <div class="task-card-actions-compact">
+                            <button type="button" class="btn-card-action edit-action" onclick="window.editTask(${t.id})">
+                                <i class="fa-solid fa-pen-to-square"></i> Editar
+                            </button>
+                            <button type="button" class="btn-card-action delete-action" onclick="window.deleteTask(${t.id})">
+                                <i class="fa-solid fa-trash-can"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                `;
             }
 
             function escapeHtml(str) {
@@ -981,6 +1141,38 @@
             }
 
             // Expose Window action handlers
+            window.toggleTaskStatus = async (id, isChecked) => {
+                const task = tasksList.find(t => t.id === id);
+                if (!task) return;
+
+                const oldStatus = task.status;
+                const newStatus = isChecked ? 'completed' : 'pending';
+
+                // Optimistic local update
+                task.status = newStatus;
+                renderTasks();
+
+                try {
+                    const response = await fetch(`${tasksBaseUrl}/academic_tasks/${id}`, {
+                        method: 'PATCH',
+                        headers: EduTrackAuth.getAuthHeaders(),
+                        body: JSON.stringify({ status: newStatus })
+                    });
+
+                    if (!response.ok) {
+                        const errData = await response.json().catch(() => ({}));
+                        throw new Error(errData.message || errData.error || 'Erro ao atualizar status da tarefa.');
+                    }
+
+                    showAlert(`Tarefa marcada como ${newStatus === 'completed' ? 'concluída' : 'pendente'}!`, 'success');
+                } catch (err) {
+                    console.error('Erro ao alternar status da tarefa:', err);
+                    task.status = oldStatus;
+                    renderTasks();
+                    showAlert(err.message || 'Não foi possível atualizar o status da tarefa.', 'error');
+                }
+            };
+
             window.editTask = (id) => {
                 const task = tasksList.find(t => t.id === id);
                 if (task) openEditModal(task);
