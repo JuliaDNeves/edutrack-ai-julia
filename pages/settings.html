@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EduTrack AI - Configurações de Perfil e Aparência">
+    <title>EduTrack AI - Configurações</title>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- Early Theme Restore Script -->
+    <script>
+        (function() {
+            var t = localStorage.getItem('edutrack_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+</head>
+
+<body>
+
+    <!-- ==========================================================================
+         Fixed Left Sidebar Navigation
+         ========================================================================== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+            <div class="brand">
+                <a href="../index.html" class="brand-link"
+                    style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <span class="brand-title">EduTrack</span>
+                </a>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item" id="nav-dashboard">
+                        <a href="dashboard.html" aria-label="Dashboard">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-disciplinas">
+                        <a href="subjects.html" aria-label="Disciplinas">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                            <span>Disciplinas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-tarefas">
+                        <a href="tasks.html" aria-label="Tarefas">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Tarefas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active" id="nav-configuracoes">
+                        <a href="settings.html" aria-label="Configurações">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Configurações</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-quick-info" id="sidebar-user-profile" aria-label="Opções de conta">
+                <div class="user-profile-default">
+                    <div class="avatar-mini" id="user-avatar-mini">--</div>
+                    <div class="user-quick-details">
+                        <h4 id="user-name-sidebar">Carregando...</h4>
+                        <p id="user-email-sidebar">Estudante</p>
+                    </div>
+                </div>
+                <div class="user-account-action" id="btn-logout" title="Sair da conta" style="cursor: pointer;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Sair</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==========================================================================
+         Main App Container
+         ========================================================================== -->
+    <div class="app-container">
+        <main class="main-content" id="main-content">
+
+            <!-- Header Bar -->
+            <header class="header-bar">
+                <div class="welcome-text">
+                    <h1 id="page-heading">Configurações <i class="fa-solid fa-gear" style="color: var(--accent-cyan); font-size: 1.2rem;"></i></h1>
+                    <p>Gerencie as informações do seu perfil acadêmico e personalize a aparência do sistema.</p>
+                </div>
+            </header>
+
+            <!-- Alert Banner Notification -->
+            <div id="settings-alert" class="alert-banner" style="display: none; margin-bottom: 24px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i id="settings-alert-icon" class="fa-solid fa-circle-info"></i>
+                    <span id="settings-alert-message">Notificação de configurações</span>
+                </div>
+            </div>
+
+            <!-- Settings Layout Grid -->
+            <div class="settings-grid">
+                
+                <!-- Section 1: User Profile Details (Read-only) -->
+                <section class="settings-card">
+                    <div class="settings-card-header">
+                        <div class="settings-card-icon cyan">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <div>
+                            <h2>Perfil do Usuário</h2>
+                            <p>Informações da sua conta de estudante no EduTrack AI</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-details-wrapper">
+                        <div class="profile-avatar-container">
+                            <div class="profile-avatar-large" id="settings-avatar-display">
+                                <span id="settings-avatar-initials">--</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-fields-grid">
+                            <div class="profile-field-item">
+                                <label><i class="fa-solid fa-user"></i> Nome Completo</label>
+                                <div class="profile-field-value" id="settings-user-name">Carregando...</div>
+                            </div>
+
+                            <div class="profile-field-item">
+                                <label><i class="fa-solid fa-envelope"></i> Endereço de E-mail</label>
+                                <div class="profile-field-value" id="settings-user-email">Carregando...</div>
+                            </div>
+
+                            <div class="profile-field-item">
+                                <label><i class="fa-solid fa-shield-halved"></i> Status da Conta</label>
+                                <div class="profile-status-badge">
+                                    <i class="fa-solid fa-circle-check"></i> Ativa e Autenticada
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Appearance & Theme Settings -->
+                <section class="settings-card">
+                    <div class="settings-card-header">
+                        <div class="settings-card-icon lilac">
+                            <i class="fa-solid fa-palette"></i>
+                        </div>
+                        <div>
+                            <h2>Aparência e Tema</h2>
+                            <p>Escolha o tema visual de sua preferência para navegação no sistema</p>
+                        </div>
+                    </div>
+
+                    <div class="theme-selection-grid">
+                        
+                        <!-- Light Theme Option Card -->
+                        <div class="theme-option-card" data-theme-choice="light" id="theme-card-light">
+                            <div class="theme-card-preview light-preview">
+                                <div class="preview-header"></div>
+                                <div class="preview-body">
+                                    <div class="preview-sidebar"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-block"></div>
+                                        <div class="preview-block sm"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="theme-option-info">
+                                <div class="theme-option-header">
+                                    <h3><i class="fa-solid fa-sun" style="color: #0284c7;"></i> Modo Claro</h3>
+                                    <div class="theme-active-indicator">
+                                        <i class="fa-solid fa-circle-check"></i> Ativo
+                                    </div>
+                                </div>
+                                <p>Interface nítida e moderna com fundo claro e iluminação suave em tom cyan e lilás.</p>
+                            </div>
+                        </div>
+
+                        <!-- Dark Theme Option Card -->
+                        <div class="theme-option-card" data-theme-choice="dark" id="theme-card-dark">
+                            <div class="theme-card-preview dark-preview">
+                                <div class="preview-header"></div>
+                                <div class="preview-body">
+                                    <div class="preview-sidebar"></div>
+                                    <div class="preview-content">
+                                        <div class="preview-block"></div>
+                                        <div class="preview-block sm"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="theme-option-info">
+                                <div class="theme-option-header">
+                                    <h3><i class="fa-solid fa-moon" style="color: #b19bf1;"></i> Modo Escuro</h3>
+                                    <div class="theme-active-indicator">
+                                        <i class="fa-solid fa-circle-check"></i> Ativo
+                                    </div>
+                                </div>
+                                <p>Interface escura original do EduTrack para menor fadiga visual em ambientes escuros.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- JavaScript Services -->
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+
+</html>

@@ -11,6 +11,14 @@
     
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Early Theme Restore Script -->
+    <script>
+        (function() {
+            var t = localStorage.getItem('edutrack_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
 </head>
 <body class="auth-body">
 
@@ -25,6 +33,17 @@
                     <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <span class="brand-title">EduTrack</span>
+            </div>
+            <!-- Accessible Theme Switcher Control -->
+            <div class="theme-toggle-container" role="region" aria-label="Alternar tema">
+                <button type="button" class="theme-toggle-btn" data-theme-target="light" title="Modo claro">
+                    <i class="fa-solid fa-sun"></i>
+                    <span>Claro</span>
+                </button>
+                <button type="button" class="theme-toggle-btn" data-theme-target="dark" title="Modo escuro">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Escuro</span>
+                </button>
             </div>
         </div>
 

@@ -2,6 +2,91 @@
  * EduTrack AI - Front-End Interactions & Standalone Page Scripts
  */
 
+// ==========================================================================
+// EduTrack Theme Manager Module (Light / Dark Mode)
+// ==========================================================================
+const EduTrackTheme = {
+    STORAGE_KEY: 'edutrack_theme',
+    
+    getPreferredTheme() {
+        const saved = localStorage.getItem(this.STORAGE_KEY);
+        if (saved === 'light' || saved === 'dark') {
+            return saved;
+        }
+        return 'light'; // Light Mode is the default for new users
+    },
+
+    setTheme(theme) {
+        const targetTheme = (theme === 'dark') ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', targetTheme);
+        localStorage.setItem(this.STORAGE_KEY, targetTheme);
+        this.updateToggleUI(targetTheme);
+    },
+
+    init() {
+        // Apply theme immediately to document element to avoid FOUC
+        const currentTheme = this.getPreferredTheme();
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        // Sync UI toggles when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.bindUI());
+        } else {
+            this.bindUI();
+        }
+    },
+
+    bindUI() {
+        const currentTheme = this.getPreferredTheme();
+        this.updateToggleUI(currentTheme);
+
+        // Bind clicks on theme toggle buttons (landing page top bar)
+        document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const selectedTheme = btn.dataset.themeTarget;
+                if (selectedTheme) {
+                    this.setTheme(selectedTheme);
+                }
+            });
+        });
+
+        // Bind theme option cards on Settings page (pages/settings.html)
+        document.querySelectorAll('.theme-option-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                const selectedTheme = card.dataset.themeChoice;
+                if (selectedTheme) {
+                    this.setTheme(selectedTheme);
+                }
+            });
+        });
+    },
+
+    updateToggleUI(theme) {
+        // Toggle buttons (landing page)
+        document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+            if (btn.dataset.themeTarget === theme) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Theme option cards on Settings page
+        document.querySelectorAll('.theme-option-card').forEach(card => {
+            if (card.dataset.themeChoice === theme) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
+    }
+};
+
+// Immediately initialize theme on script load
+EduTrackTheme.init();
+
 document.addEventListener('DOMContentLoaded', async () => {
     
     // Path Helpers for Navigation
@@ -343,6 +428,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const avatarLarge = document.getElementById('user-avatar-large');
             if (avatarLarge) avatarLarge.textContent = initials;
+
+            // Hydrate Settings Page User Profile Details
+            const settingsUserName = document.getElementById('settings-user-name');
+            if (settingsUserName) {
+                const displayName = user.name || user.email || 'Estudante';
+                const displayEmail = user.email || 'Não informado';
+                settingsUserName.textContent = displayName;
+                
+                const settingsUserEmail = document.getElementById('settings-user-email');
+                if (settingsUserEmail) settingsUserEmail.textContent = displayEmail;
+
+                const settingsAvatarDisplay = document.getElementById('settings-avatar-display');
+                const settingsAvatarInitials = document.getElementById('settings-avatar-initials');
+
+                if (settingsAvatarDisplay) {
+                    if (user.avatar || user.avatar_url) {
+                        const avatarSrc = user.avatar || user.avatar_url;
+                        settingsAvatarDisplay.innerHTML = `<img src="${escapeHtml(avatarSrc)}" alt="Foto de perfil">`;
+                    } else if (settingsAvatarInitials) {
+                        settingsAvatarInitials.textContent = initials;
+                    }
+                }
+            }
 
             // Hydrate Dashboard Real Data from Xano APIs
             await hydrateDashboardData();

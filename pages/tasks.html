@@ -12,6 +12,14 @@
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="../css/styles.css">
 
+    <!-- Early Theme Restore Script -->
+    <script>
+        (function() {
+            var t = localStorage.getItem('edutrack_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+
     <style>
         /* Custom modal and extra component styles for Tasks */
         .modal-overlay {
@@ -20,7 +28,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(9, 13, 22, 0.85);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(8px);
             z-index: 1000;
             display: flex;
@@ -36,6 +44,7 @@
             width: 100%;
             max-width: 580px;
             box-shadow: var(--shadow-card);
+            backdrop-filter: var(--card-backdrop);
             overflow: hidden;
             animation: modalFadeIn 0.25s ease-out;
         }
@@ -111,7 +120,7 @@
         }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             padding: 10px 14px;
@@ -122,15 +131,15 @@
         }
 
         .form-control option {
-            background-color: var(--bg-card, #121824);
-            color: var(--text-main, #ffffff);
+            background-color: var(--bg-secondary);
+            color: var(--text-main);
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(83, 220, 227, 0.2);
-            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 10px rgba(var(--accent-cyan-rgb), 0.25);
+            background: var(--bg-card-hover);
         }
 
         textarea.form-control {
@@ -145,12 +154,12 @@
             gap: 12px;
             padding: 16px 24px;
             border-top: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.2);
+            background: var(--bg-secondary);
         }
 
         .btn-primary {
             background: var(--gradient-primary);
-            color: var(--bg-main);
+            color: var(--brand-icon-text);
             border: none;
             border-radius: var(--radius-sm);
             padding: 10px 20px;
@@ -169,14 +178,20 @@
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.06);
-            color: var(--text-muted);
+            background: var(--bg-card-hover);
+            color: var(--text-main);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             padding: 10px 18px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-glow);
+            color: var(--text-main);
         }
 
         .btn-secondary:hover {
@@ -280,16 +295,67 @@
             opacity: 1;
         }
 
-        /* Attenuated styling for completed task cards */
-        .task-card.task-card-completed {
+        /* Completed task cards styling - Dark Mode (Preserved original) */
+        [data-theme="dark"] .task-card.task-card-completed {
             opacity: 0.82;
             background: rgba(18, 24, 36, 0.55);
             border-color: rgba(16, 185, 129, 0.25);
         }
 
-        .task-card.task-card-completed:hover {
+        [data-theme="dark"] .task-card.task-card-completed:hover {
             opacity: 1;
             border-color: rgba(16, 185, 129, 0.45);
+        }
+
+        /* Completed task cards styling - Light Mode (Soft Blue-Cyan Aesthetic) */
+        [data-theme="light"] .task-card.task-card-completed,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed {
+            opacity: 1;
+            background: linear-gradient(145deg, rgba(240, 249, 255, 0.92) 0%, rgba(224, 242, 254, 0.72) 100%);
+            border: 1px solid rgba(2, 132, 199, 0.22);
+            box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06), var(--shadow-subtle);
+            backdrop-filter: var(--card-backdrop);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed:hover,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed:hover {
+            opacity: 1;
+            background: linear-gradient(145deg, rgba(245, 251, 255, 0.96) 0%, rgba(218, 240, 253, 0.82) 100%);
+            border-color: rgba(2, 132, 199, 0.4);
+            box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12), var(--shadow-card);
+            transform: translateY(-2px);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .task-description-box,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .task-description-box {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(2, 132, 199, 0.12);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .task-card-actions-compact,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .task-card-actions-compact {
+            border-top: 1px solid rgba(2, 132, 199, 0.12);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .btn-card-action,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .btn-card-action {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(2, 132, 199, 0.18);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .btn-card-action:hover,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .btn-card-action:hover {
+            background: #ffffff;
+            color: var(--text-main);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .status-badge-completed,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .status-badge-completed {
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .task-card-top {
@@ -578,6 +644,12 @@
                             <span>Tarefas</span>
                         </a>
                     </li>
+                    <li class="nav-item" id="nav-configuracoes">
+                        <a href="settings.html" aria-label="Configurações">
+                            <i class="fa-solid fa-gear"></i>
+                            <span>Configurações</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -608,7 +680,7 @@
             <!-- Header Bar -->
             <header class="header-bar">
                 <div class="welcome-text">
-                    <h1 id="page-heading">Tarefas <i class="fa-solid fa-list-check" style="color: #53dce3; font-size: 1.2rem;"></i></h1>
+                    <h1 id="page-heading">Tarefas <i class="fa-solid fa-list-check" style="color: var(--accent-cyan); font-size: 1.2rem;"></i></h1>
                     <p>Gerencie suas atividades acadêmicas, prazos, status e tempo de estudo.</p>
                 </div>
 
