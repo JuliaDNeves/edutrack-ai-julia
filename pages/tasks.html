@@ -295,16 +295,67 @@
             opacity: 1;
         }
 
-        /* Attenuated styling for completed task cards */
-        .task-card.task-card-completed {
+        /* Completed task cards styling - Dark Mode (Preserved original) */
+        [data-theme="dark"] .task-card.task-card-completed {
             opacity: 0.82;
             background: rgba(18, 24, 36, 0.55);
             border-color: rgba(16, 185, 129, 0.25);
         }
 
-        .task-card.task-card-completed:hover {
+        [data-theme="dark"] .task-card.task-card-completed:hover {
             opacity: 1;
             border-color: rgba(16, 185, 129, 0.45);
+        }
+
+        /* Completed task cards styling - Light Mode (Soft Blue-Cyan Aesthetic) */
+        [data-theme="light"] .task-card.task-card-completed,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed {
+            opacity: 1;
+            background: linear-gradient(145deg, rgba(240, 249, 255, 0.92) 0%, rgba(224, 242, 254, 0.72) 100%);
+            border: 1px solid rgba(2, 132, 199, 0.22);
+            box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06), var(--shadow-subtle);
+            backdrop-filter: var(--card-backdrop);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed:hover,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed:hover {
+            opacity: 1;
+            background: linear-gradient(145deg, rgba(245, 251, 255, 0.96) 0%, rgba(218, 240, 253, 0.82) 100%);
+            border-color: rgba(2, 132, 199, 0.4);
+            box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12), var(--shadow-card);
+            transform: translateY(-2px);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .task-description-box,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .task-description-box {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(2, 132, 199, 0.12);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .task-card-actions-compact,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .task-card-actions-compact {
+            border-top: 1px solid rgba(2, 132, 199, 0.12);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .btn-card-action,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .btn-card-action {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(2, 132, 199, 0.18);
+            color: var(--text-muted);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .btn-card-action:hover,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .btn-card-action:hover {
+            background: #ffffff;
+            color: var(--text-main);
+        }
+
+        [data-theme="light"] .task-card.task-card-completed .status-badge-completed,
+        :root:not([data-theme="dark"]) .task-card.task-card-completed .status-badge-completed {
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .task-card-top {
