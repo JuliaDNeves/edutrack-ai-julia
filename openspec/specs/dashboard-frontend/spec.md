@@ -34,18 +34,34 @@ The system SHALL calculate and display the authenticated user's real task progre
 The system SHALL render summary metric cards with real data for the authenticated user:
 1. "Disciplinas": total number of active subjects retrieved from `GET /subjects`.
 2. "Tarefas Pendentes": total number of user tasks with `status === 'pending'`.
-3. "Tempo Estimado": total sum of `estimated_time` in minutes of `completed` tasks only, formatted in human-readable hours and minutes (pending tasks SHALL NOT be included in this calculation).
+3. "Tempo de estudo": total sum of `spent_time` in minutes of `completed` tasks only, considering only filled values and formatted in human-readable hours and minutes (tasks with empty `spent_time` and pending tasks SHALL NOT contribute to this total).
 
 #### Scenario: Render metric cards
 - **WHEN** the user views the academic metrics section
-- **THEN** the system displays the actual count of enrolled subjects, actual count of pending tasks, and total estimated time of completed tasks formatted in hours/minutes.
+- **THEN** the system displays the actual count of enrolled subjects, actual count of pending tasks, and total completed study time ("Tempo de estudo") calculated by summing `spent_time` of completed tasks with filled values and formatted in hours/minutes.
 
 ### Requirement: Study Time Vertical Bar Chart
-The system SHALL render a vertical bar chart displaying total completed study time per subject for all subjects retrieved from `GET /subjects`. For each subject, the system SHALL sum `estimated_time` of `completed` tasks associated with that `subject_id`. Subjects with zero completed tasks SHALL display 0h in the chart.
+The system SHALL render a vertical bar chart titled "Tempo de Estudo por Disciplina" comparing two data series for each subject belonging to the authenticated user:
+1. "Horas estimadas": sum of `estimated_time` in minutes for completed tasks (`status === 'completed'`) of that subject.
+2. "Tempo de estudo": sum of `spent_time` when filled, or `estimated_time` when `spent_time` is null, empty, or unassigned, strictly for completed tasks (`status === 'completed'`) of that subject.
+
+Both series SHALL be visually differentiated using distinct colors from the EduTrack identity palette (cyan `#53dce3` and lilac `#b19bf1`), accompanied by an explanatory legend. On hovering over a subject's bar group, the system SHALL display a tooltip presenting both series side by side with clear color identification and formatted times in hours and minutes.
 
 #### Scenario: Render vertical bar chart
 - **WHEN** the user views the study time chart section
-- **THEN** the system renders a bar for each subject belonging to the authenticated user showing the sum of estimated time for completed tasks, displaying 0h for subjects without completed tasks.
+- **THEN** the system renders a comparative bar chart for each subject belonging to the authenticated user showing "Horas estimadas" and "Tempo de estudo" using cyan and lilac colors, displaying 0h for subjects without completed tasks.
+
+#### Scenario: User views comparative study time chart
+- **WHEN** the user views the "Tempo de Estudo por Disciplina" chart section with subjects and completed tasks
+- **THEN** the system SHALL display dual comparative vertical bars for each subject showing "Horas estimadas" and "Tempo de estudo", using cyan and lilac colors and an informative legend.
+
+#### Scenario: User hovers over subject bars
+- **WHEN** the user hovers over a subject's chart entry
+- **THEN** the system SHALL display an interactive tooltip comparing the subject's estimated hours and actual study time with color indicators and formatted time values.
+
+#### Scenario: Completed task without spent time in subject chart
+- **WHEN** a completed task for a subject has empty or null `spent_time`
+- **THEN** the "Tempo de estudo" series for that subject SHALL fall back to using the task's `estimated_time`.
 
 ### Requirement: Right Side User Panel and Upcoming Tasks
 The system SHALL render a right side panel containing student profile info without streak tags, along with a list of up to 6 upcoming real pending tasks retrieved from `GET /academic_tasks`. Pending tasks SHALL be ordered by `due_date` ascending (earliest due date first), displaying the task title, formatted due date/deadline, and associated subject name.
