@@ -723,8 +723,16 @@ body {
 
 .chart-header {
     display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.chart-header-subrow {
+    display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .chart-title h3 {
