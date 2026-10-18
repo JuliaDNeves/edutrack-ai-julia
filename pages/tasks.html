@@ -712,8 +712,13 @@
                 <div>
                     <span id="tasks-count-label">Exibindo <strong>0</strong> tarefas</span>
                 </div>
-                <div id="total-time-label">
-                    Total: <strong>0 min</strong> de tempo estimado
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; text-align:right;">
+                    <div id="total-time-label">
+                        Total: <strong>0 min</strong> de tempo estimado
+                    </div>
+                    <div id="spent-time-label">
+                        Tempo de estudo realizado: <strong>0 min</strong>
+                    </div>
                 </div>
             </div>
 
@@ -879,6 +884,7 @@
             const emptyStateEl = document.getElementById('empty-state');
             const countLabelEl = document.getElementById('tasks-count-label');
             const totalTimeEl = document.getElementById('total-time-label');
+            const spentTimeEl = document.getElementById('spent-time-label');
             const searchInput = document.getElementById('header-search');
 
             const taskModal = document.getElementById('task-modal');
@@ -1081,6 +1087,7 @@
                     emptyStateEl.style.display = 'flex';
                     if (countLabelEl) countLabelEl.innerHTML = 'Exibindo <strong>0</strong> tarefas';
                     if (totalTimeEl) totalTimeEl.innerHTML = 'Total: <strong>0 min</strong> de tempo estimado';
+                    if (spentTimeEl) spentTimeEl.innerHTML = 'Tempo de estudo realizado: <strong>0 min</strong>';
                     return;
                 }
 
@@ -1088,8 +1095,13 @@
                 gridEl.style.display = 'flex';
 
                 const totalEstimatedMinutes = tasksList.reduce((acc, curr) => acc + (Number(curr.estimated_time) || 0), 0);
+                const totalSpentMinutes = tasksList
+                    .filter(t => t.status === 'completed' && t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '')
+                    .reduce((acc, curr) => acc + (Number(curr.spent_time) || 0), 0);
+
                 if (countLabelEl) countLabelEl.innerHTML = `Exibindo <strong>${filtered.length}</strong> de <strong>${tasksList.length}</strong> tarefas`;
                 if (totalTimeEl) totalTimeEl.innerHTML = `Total: <strong>${formatTimeMinutes(totalEstimatedMinutes)}</strong> de tempo estimado`;
+                if (spentTimeEl) spentTimeEl.innerHTML = `Tempo de estudo realizado: <strong>${formatTimeMinutes(totalSpentMinutes)}</strong>`;
 
                 if (filtered.length === 0) {
                     gridEl.innerHTML = `
