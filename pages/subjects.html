@@ -416,6 +416,149 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
             color: #f87171;
         }
+
+        /* Filter Toggle Button in Header Bar */
+        .btn-filter-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .btn-filter-toggle:hover {
+            color: var(--accent-cyan);
+            border-color: var(--border-glow);
+            background: var(--bg-card-hover);
+            box-shadow: 0 0 10px rgba(var(--accent-cyan-rgb), 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-filter-toggle.active {
+            background: rgba(var(--accent-cyan-rgb), 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(var(--accent-cyan-rgb), 0.25);
+        }
+
+        /* Subjects Filter Bar Component */
+        .subjects-filters-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 16px;
+            box-shadow: var(--shadow-subtle);
+            backdrop-filter: var(--card-backdrop);
+            transition: var(--transition);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .subjects-filters-bar .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1 1 180px;
+            min-width: 150px;
+        }
+
+        .subjects-filters-bar .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .subjects-filters-bar .filter-control {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 9px 12px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            font-family: inherit;
+            outline: none;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .subjects-filters-bar .filter-control option {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+        }
+
+        .subjects-filters-bar .filter-control:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(var(--accent-cyan-rgb), 0.2);
+            background: var(--bg-card-hover);
+        }
+
+        .subjects-filters-bar .filter-actions {
+            display: flex;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .subjects-filters-bar .btn-clear-filters {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 9px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            white-space: nowrap;
+            height: 38px;
+        }
+
+        .subjects-filters-bar .btn-clear-filters:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .subjects-filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 14px 16px;
+            }
+
+            .subjects-filters-bar .filter-group {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            .subjects-filters-bar .filter-actions {
+                width: 100%;
+            }
+
+            .subjects-filters-bar .btn-clear-filters {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -494,7 +637,11 @@
                     <p>Gerencie suas matérias, carga horária e cronograma acadêmico.</p>
                 </div>
 
-                <div class="header-actions" style="display:flex; align-items:center; gap:16px;">
+                <div class="header-actions" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <button type="button" class="btn-filter-toggle" id="btn-filter-toggle" title="Filtrar disciplinas" aria-label="Mostrar ou ocultar filtros" aria-expanded="false">
+                        <i class="fa-solid fa-filter"></i>
+                    </button>
+
                     <div class="search-box">
                         <input type="text" id="header-search" placeholder="Buscar por disciplina ou professor..." aria-label="Pesquisar">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -515,6 +662,33 @@
                 <button type="button" onclick="document.getElementById('alert-feedback').style.display='none'" style="background:none; border:none; color:inherit; cursor:pointer;">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
+            </div>
+
+            <!-- Subjects Filters Bar -->
+            <div class="subjects-filters-bar" id="subjects-filters-bar" aria-label="Filtros de disciplinas" style="display: none;">
+                <div class="filter-group">
+                    <label for="filter-start-date"><i class="fa-solid fa-calendar-day"></i> Início a partir de:</label>
+                    <input type="date" id="filter-start-date" class="filter-control" title="Data de início da disciplina">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-end-date"><i class="fa-solid fa-calendar-day"></i> Término até:</label>
+                    <input type="date" id="filter-end-date" class="filter-control" title="Data de término da disciplina">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-teacher"><i class="fa-solid fa-chalkboard-user"></i> Professor:</label>
+                    <select id="filter-teacher" class="filter-control" aria-label="Filtrar por professor">
+                        <option value="">Todos os professores</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-hours"><i class="fa-solid fa-clock"></i> Carga horária (horas):</label>
+                    <input type="number" id="filter-hours" class="filter-control" placeholder="Ex: 60" min="1" step="1" title="Quantidade de horas da disciplina">
+                </div>
+                <div class="filter-actions">
+                    <button type="button" class="btn-clear-filters" id="btn-clear-filters" title="Limpar todos os filtros">
+                        <i class="fa-solid fa-filter-circle-xmark"></i> Limpar Filtros
+                    </button>
+                </div>
             </div>
 
             <!-- Stats Bar -->
@@ -681,6 +855,14 @@
             const totalHoursEl = document.getElementById('total-hours-label');
             const searchInput = document.getElementById('header-search');
 
+            const btnFilterToggle = document.getElementById('btn-filter-toggle');
+            const subjectsFiltersBar = document.getElementById('subjects-filters-bar');
+            const filterStartDate = document.getElementById('filter-start-date');
+            const filterEndDate = document.getElementById('filter-end-date');
+            const filterTeacher = document.getElementById('filter-teacher');
+            const filterHours = document.getElementById('filter-hours');
+            const btnClearFilters = document.getElementById('btn-clear-filters');
+
             const subjectModal = document.getElementById('subject-modal');
             const modalTitle = document.getElementById('modal-title');
             const formSubject = document.getElementById('form-subject');
@@ -781,6 +963,30 @@
                 deleteModal.style.display = 'none';
             }
 
+            function populateTeacherFilter() {
+                if (!filterTeacher) return;
+                const prevTeacher = filterTeacher.value;
+                const teachers = Array.from(
+                    new Set(
+                        subjectsList
+                            .map(s => (s.teacher ? s.teacher.trim() : ''))
+                            .filter(t => t.length > 0)
+                    )
+                ).sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+
+                filterTeacher.innerHTML = '<option value="">Todos os professores</option>';
+                teachers.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.textContent = t;
+                    filterTeacher.appendChild(opt);
+                });
+
+                if (prevTeacher && teachers.includes(prevTeacher)) {
+                    filterTeacher.value = prevTeacher;
+                }
+            }
+
             // 4. API Calls
             async function fetchSubjects() {
                 try {
@@ -797,6 +1003,7 @@
 
                     const data = await response.json();
                     subjectsList = Array.isArray(data) ? data : [];
+                    populateTeacherFilter();
                     renderSubjects();
                 } catch (err) {
                     console.error('Erro ao buscar disciplinas:', err);
@@ -806,10 +1013,31 @@
 
             function renderSubjects() {
                 const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const startDateFilter = filterStartDate ? filterStartDate.value : '';
+                const endDateFilter = filterEndDate ? filterEndDate.value : '';
+                const teacherFilter = filterTeacher ? filterTeacher.value : '';
+                const hoursFilter = filterHours && filterHours.value !== '' ? Number(filterHours.value) : null;
+
                 const filtered = subjectsList.filter(s => {
+                    // 1. Text search: matches name or teacher
                     const matchName = s.name && s.name.toLowerCase().includes(query);
                     const matchTeacher = s.teacher && s.teacher.toLowerCase().includes(query);
-                    return matchName || matchTeacher;
+                    const matchText = !query || (matchName || matchTeacher);
+
+                    // 2. Date filters (start_date and end_date in YYYY-MM-DD)
+                    const itemStartDate = s.start_date ? String(s.start_date).split('T')[0] : '';
+                    const itemEndDate = s.end_date ? String(s.end_date).split('T')[0] : '';
+                    const matchStart = !startDateFilter || (itemStartDate && itemStartDate >= startDateFilter);
+                    const matchEnd = !endDateFilter || (itemEndDate && itemEndDate <= endDateFilter);
+
+                    // 3. Teacher filter
+                    const matchSelectedTeacher = !teacherFilter || (s.teacher && s.teacher.trim() === teacherFilter);
+
+                    // 4. Hours filter
+                    const matchHours = hoursFilter === null || (s.hours !== null && s.hours !== undefined && s.hours !== '' && Number(s.hours) === hoursFilter);
+
+                    // Conjunctive combination (AND)
+                    return matchText && matchStart && matchEnd && matchSelectedTeacher && matchHours;
                 });
 
                 if (subjectsList.length === 0) {
@@ -823,15 +1051,19 @@
                 emptyStateEl.style.display = 'none';
                 gridEl.style.display = 'grid';
 
-                const totalHours = subjectsList.reduce((acc, curr) => acc + (Number(curr.hours) || 0), 0);
+                const totalHours = filtered.reduce((acc, curr) => acc + (Number(curr.hours) || 0), 0);
                 if (countLabelEl) countLabelEl.innerHTML = `Exibindo <strong>${filtered.length}</strong> de <strong>${subjectsList.length}</strong> disciplinas`;
                 if (totalHoursEl) totalHoursEl.innerHTML = `Total: <strong>${totalHours}h</strong> de carga horária`;
 
                 if (filtered.length === 0) {
                     gridEl.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-                            <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 12px; opacity: 0.5;"></i>
-                            <p>Nenhuma disciplina encontrada para "${query}".</p>
+                        <div style="grid-column: 1/-1; text-align: center; padding: 48px 20px; color: var(--text-muted); width: 100%;">
+                            <i class="fa-solid fa-filter-circle-xmark" style="font-size: 2.2rem; margin-bottom: 14px; opacity: 0.6; color: var(--accent-cyan);"></i>
+                            <h4 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 8px;">Nenhuma disciplina encontrada</h4>
+                            <p style="font-size: 0.9rem; max-width: 440px; margin: 0 auto 16px auto;">Nenhuma disciplina corresponde aos filtros selecionados. Tente ajustar os parâmetros ou limpar os filtros.</p>
+                            <button type="button" class="btn-secondary" onclick="window.clearAllFilters()" style="padding: 8px 18px; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <i class="fa-solid fa-rotate-left"></i> Limpar Filtros
+                            </button>
                         </div>
                     `;
                     return;
@@ -1001,6 +1233,43 @@
             if (btnCancelDelete) btnCancelDelete.addEventListener('click', closeDeleteModal);
 
             if (searchInput) searchInput.addEventListener('input', renderSubjects);
+
+            // Clear all filters function
+            function clearAllFilters() {
+                if (filterStartDate) filterStartDate.value = '';
+                if (filterEndDate) filterEndDate.value = '';
+                if (filterTeacher) filterTeacher.value = '';
+                if (filterHours) filterHours.value = '';
+                if (searchInput) searchInput.value = '';
+                renderSubjects();
+            }
+            window.clearAllFilters = clearAllFilters;
+
+            // Event Listeners for Filter Controls
+            if (filterStartDate) filterStartDate.addEventListener('change', renderSubjects);
+            if (filterEndDate) filterEndDate.addEventListener('change', renderSubjects);
+            if (filterTeacher) filterTeacher.addEventListener('change', renderSubjects);
+            if (filterHours) {
+                filterHours.addEventListener('input', renderSubjects);
+                filterHours.addEventListener('change', renderSubjects);
+            }
+            if (btnClearFilters) btnClearFilters.addEventListener('click', clearAllFilters);
+
+            // Toggle Filter Panel Visibility
+            if (btnFilterToggle && subjectsFiltersBar) {
+                btnFilterToggle.addEventListener('click', () => {
+                    const isHidden = subjectsFiltersBar.style.display === 'none';
+                    if (isHidden) {
+                        subjectsFiltersBar.style.display = 'flex';
+                        btnFilterToggle.classList.add('active');
+                        btnFilterToggle.setAttribute('aria-expanded', 'true');
+                    } else {
+                        subjectsFiltersBar.style.display = 'none';
+                        btnFilterToggle.classList.remove('active');
+                        btnFilterToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
 
             // Initial Fetch
             await fetchSubjects();

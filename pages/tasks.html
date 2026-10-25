@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="EduTrack AI - Gerenciamento de Tarefas Acadêmicas">
     <title>EduTrack AI - Tarefas</title>
-    
+
     <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="../css/styles.css">
 
     <!-- Early Theme Restore Script -->
     <script>
-        (function() {
+        (function () {
             var t = localStorage.getItem('edutrack_theme') || 'light';
             document.documentElement.setAttribute('data-theme', t);
         })();
@@ -54,8 +56,15 @@
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(15px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .modal-header {
@@ -403,7 +412,7 @@
             background: rgba(83, 220, 227, 0.1);
         }
 
-        .task-checkbox-wrapper input:checked ~ .custom-checkbox {
+        .task-checkbox-wrapper input:checked~.custom-checkbox {
             background: #10b981;
             border-color: #10b981;
             color: #ffffff;
@@ -606,8 +615,152 @@
             border: 1px solid rgba(239, 68, 68, 0.3);
             color: #f87171;
         }
+
+        /* Filter Toggle Button in Header Bar */
+        .btn-filter-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .btn-filter-toggle:hover {
+            color: var(--accent-cyan);
+            border-color: var(--border-glow);
+            background: var(--bg-card-hover);
+            box-shadow: 0 0 10px rgba(var(--accent-cyan-rgb), 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-filter-toggle.active {
+            background: rgba(var(--accent-cyan-rgb), 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(var(--accent-cyan-rgb), 0.25);
+        }
+
+        /* Tasks Filter Bar Component */
+        .tasks-filters-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 16px;
+            box-shadow: var(--shadow-subtle);
+            backdrop-filter: var(--card-backdrop);
+            transition: var(--transition);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .tasks-filters-bar .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1 1 180px;
+            min-width: 150px;
+        }
+
+        .tasks-filters-bar .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tasks-filters-bar .filter-control {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 9px 12px;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            font-family: inherit;
+            outline: none;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .tasks-filters-bar .filter-control option {
+            background: var(--bg-secondary);
+            color: var(--text-main);
+        }
+
+        .tasks-filters-bar .filter-control:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(var(--accent-cyan-rgb), 0.2);
+            background: var(--bg-card-hover);
+        }
+
+        .tasks-filters-bar .filter-actions {
+            display: flex;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .tasks-filters-bar .btn-clear-filters {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 9px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            white-space: nowrap;
+            height: 38px;
+        }
+
+        .tasks-filters-bar .btn-clear-filters:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .tasks-filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 14px 16px;
+            }
+
+            .tasks-filters-bar .filter-group {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            .tasks-filters-bar .filter-actions {
+                width: 100%;
+            }
+
+            .tasks-filters-bar .btn-clear-filters {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <!-- ==========================================================================
@@ -616,7 +769,8 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-top">
             <div class="brand">
-                <a href="../index.html" class="brand-link" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
+                <a href="../index.html" class="brand-link"
+                    style="display:flex; align-items:center; gap:12px; text-decoration:none;">
                     <div class="brand-icon">
                         <i class="fa-solid fa-graduation-cap"></i>
                     </div>
@@ -676,17 +830,24 @@
          ========================================================================== -->
     <div class="app-container">
         <main class="main-content" id="main-content">
-            
+
             <!-- Header Bar -->
             <header class="header-bar">
                 <div class="welcome-text">
-                    <h1 id="page-heading">Tarefas <i class="fa-solid fa-list-check" style="color: var(--accent-cyan); font-size: 1.2rem;"></i></h1>
+                    <h1 id="page-heading">Tarefas <i class="fa-solid fa-list-check"
+                            style="color: var(--accent-cyan); font-size: 1.2rem;"></i></h1>
                     <p>Gerencie suas atividades acadêmicas, prazos, status e tempo de estudo.</p>
                 </div>
 
-                <div class="header-actions" style="display:flex; align-items:center; gap:16px;">
+                <div class="header-actions" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <button type="button" class="btn-filter-toggle" id="btn-filter-toggle" title="Filtrar tarefas"
+                        aria-label="Mostrar ou ocultar filtros" aria-expanded="false">
+                        <i class="fa-solid fa-filter"></i>
+                    </button>
+
                     <div class="search-box">
-                        <input type="text" id="header-search" placeholder="Buscar por tarefa ou descrição..." aria-label="Pesquisar">
+                        <input type="text" id="header-search" placeholder="Buscar por tarefa ou descrição..."
+                            aria-label="Pesquisar">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
 
@@ -702,18 +863,58 @@
                     <i id="alert-icon" class="fa-solid fa-circle-info"></i>
                     <span id="alert-message">Mensagem de notificação</span>
                 </div>
-                <button type="button" onclick="document.getElementById('alert-feedback').style.display='none'" style="background:none; border:none; color:inherit; cursor:pointer;">
+                <button type="button" onclick="document.getElementById('alert-feedback').style.display='none'"
+                    style="background:none; border:none; color:inherit; cursor:pointer;">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
+            <!-- Tasks Filters Bar -->
+            <div class="tasks-filters-bar" id="tasks-filters-bar" aria-label="Filtros de tarefas"
+                style="display: none;">
+                <div class="filter-group">
+                    <label for="filter-date-from"><i class="fa-solid fa-calendar-day"></i> De:</label>
+                    <input type="date" id="filter-date-from" class="filter-control" title="Data inicial prevista">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-date-to"><i class="fa-solid fa-calendar-day"></i> Até:</label>
+                    <input type="date" id="filter-date-to" class="filter-control" title="Data final prevista">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-status"><i class="fa-solid fa-circle-dot"></i> Status:</label>
+                    <select id="filter-status" class="filter-control" aria-label="Filtrar por status">
+                        <option value="">Todos os status</option>
+                        <option value="pending">Pendente</option>
+                        <option value="completed">Concluída</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-subject"><i class="fa-solid fa-book-bookmark"></i> Disciplina:</label>
+                    <select id="filter-subject" class="filter-control" aria-label="Filtrar por disciplina">
+                        <option value="">Todas as disciplinas</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button type="button" class="btn-clear-filters" id="btn-clear-filters"
+                        title="Limpar todos os filtros">
+                        <i class="fa-solid fa-filter-circle-xmark"></i> Limpar Filtros
+                    </button>
+                </div>
+            </div>
+
             <!-- Stats Bar -->
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:20px; color:var(--text-muted); font-size:0.9rem;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-top:0; color:var(--text-muted); font-size:0.9rem;">
                 <div>
                     <span id="tasks-count-label">Exibindo <strong>0</strong> tarefas</span>
                 </div>
-                <div id="total-time-label">
-                    Total: <strong>0 min</strong> de tempo estimado
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px; text-align:right;">
+                    <div id="total-time-label">
+                        Tempo estimado: <strong>0 min</strong>
+                    </div>
+                    <div id="spent-time-label">
+                        Tempo de estudo: <strong>0 min</strong>
+                    </div>
                 </div>
             </div>
 
@@ -755,7 +956,8 @@
 
                     <div class="form-group">
                         <label for="task-title">Título da Tarefa *</label>
-                        <input type="text" id="task-title" class="form-control" placeholder="Ex: Resolver lista de exercícios de Cálculo" required>
+                        <input type="text" id="task-title" class="form-control"
+                            placeholder="Ex: Resolver lista de exercícios de Cálculo" required>
                     </div>
 
                     <div class="form-row-2">
@@ -783,18 +985,21 @@
 
                         <div class="form-group">
                             <label for="task-estimated-time">Tempo Estimado (minutos) *</label>
-                            <input type="number" id="task-estimated-time" class="form-control" placeholder="Ex: 60" min="1" step="1" required>
+                            <input type="number" id="task-estimated-time" class="form-control" placeholder="Ex: 60"
+                                min="1" step="1" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="task-spent-time">Tempo Gasto (minutos)</label>
-                        <input type="number" id="task-spent-time" class="form-control" placeholder="Ex: 45 (opcional)" min="0" step="1">
+                        <input type="number" id="task-spent-time" class="form-control" placeholder="Ex: 45 (opcional)"
+                            min="0" step="1">
                     </div>
 
                     <div class="form-group">
                         <label for="task-description">Descrição</label>
-                        <textarea id="task-description" class="form-control" placeholder="Insira instruções, capítulos para leitura ou anotações extras..."></textarea>
+                        <textarea id="task-description" class="form-control"
+                            placeholder="Insira instruções, capítulos para leitura ou anotações extras..."></textarea>
                     </div>
                 </div>
 
@@ -822,7 +1027,8 @@
 
             <div class="modal-body">
                 <p style="color:var(--text-main); font-size:0.95rem; line-height:1.5;">
-                    Tem certeza de que deseja excluir a tarefa <strong id="delete-task-title" style="color:var(--accent-cyan);"></strong>?
+                    Tem certeza de que deseja excluir a tarefa <strong id="delete-task-title"
+                        style="color:var(--accent-cyan);"></strong>?
                 </p>
                 <p style="color:var(--text-muted); font-size:0.85rem;">
                     Esta ação removerá o registro permanentemente do EduTrack AI.
@@ -879,7 +1085,16 @@
             const emptyStateEl = document.getElementById('empty-state');
             const countLabelEl = document.getElementById('tasks-count-label');
             const totalTimeEl = document.getElementById('total-time-label');
+            const spentTimeEl = document.getElementById('spent-time-label');
             const searchInput = document.getElementById('header-search');
+
+            const filterDateFrom = document.getElementById('filter-date-from');
+            const filterDateTo = document.getElementById('filter-date-to');
+            const filterStatus = document.getElementById('filter-status');
+            const filterSubject = document.getElementById('filter-subject');
+            const btnClearFilters = document.getElementById('btn-clear-filters');
+            const btnFilterToggle = document.getElementById('btn-filter-toggle');
+            const tasksFiltersBar = document.getElementById('tasks-filters-bar');
 
             const taskModal = document.getElementById('task-modal');
             const modalTitle = document.getElementById('modal-title');
@@ -969,11 +1184,11 @@
                 formTask.reset();
                 taskIdInput.value = task.id;
                 modalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square" style="color:#53dce3;"></i> Editar Tarefa';
-                
+
                 titleInput.value = task.title || '';
                 subjectSelect.value = task.subject_id || '';
                 statusSelect.value = task.status || 'pending';
-                
+
                 // Format due_date for input[type="date"] (YYYY-MM-DD)
                 if (task.due_date) {
                     const formatted = String(task.due_date).split('T')[0];
@@ -1021,9 +1236,13 @@
 
                     const data = await response.json();
                     const subjects = Array.isArray(data) ? data : [];
-                    
+
+                    const prevFilterSubjectVal = filterSubject ? filterSubject.value : '';
                     subjectsMap.clear();
                     subjectSelect.innerHTML = '<option value="" disabled selected>Selecione uma disciplina...</option>';
+                    if (filterSubject) {
+                        filterSubject.innerHTML = '<option value="">Todas as disciplinas</option>';
+                    }
 
                     if (subjects.length === 0) {
                         const opt = document.createElement('option');
@@ -1038,7 +1257,18 @@
                             opt.value = s.id;
                             opt.textContent = s.name;
                             subjectSelect.appendChild(opt);
+
+                            if (filterSubject) {
+                                const filterOpt = document.createElement('option');
+                                filterOpt.value = s.id;
+                                filterOpt.textContent = s.name;
+                                filterSubject.appendChild(filterOpt);
+                            }
                         });
+
+                        if (filterSubject && prevFilterSubjectVal) {
+                            filterSubject.value = prevFilterSubjectVal;
+                        }
                     }
                 } catch (err) {
                     console.error('Erro ao buscar disciplinas para select:', err);
@@ -1068,34 +1298,64 @@
 
             function renderTasks() {
                 const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                const dateFrom = filterDateFrom ? filterDateFrom.value : '';
+                const dateTo = filterDateTo ? filterDateTo.value : '';
+                const selectedStatus = filterStatus ? filterStatus.value : '';
+                const selectedSubject = filterSubject ? filterSubject.value : '';
+
                 const filtered = tasksList.filter(t => {
+                    // 1. Text search: matches title, description, or subject name
                     const matchTitle = t.title && t.title.toLowerCase().includes(query);
                     const matchDesc = t.description && t.description.toLowerCase().includes(query);
                     const subjectName = subjectsMap.get(t.subject_id) || '';
                     const matchSubject = subjectName.toLowerCase().includes(query);
-                    return matchTitle || matchDesc || matchSubject;
+                    const matchText = !query || (matchTitle || matchDesc || matchSubject);
+
+                    // 2. Date range filter: compare due_date (YYYY-MM-DD)
+                    const taskDate = t.due_date ? String(t.due_date).split('T')[0] : '';
+                    const matchDateFrom = !dateFrom || (taskDate && taskDate >= dateFrom);
+                    const matchDateTo = !dateTo || (taskDate && taskDate <= dateTo);
+
+                    // 3. Status filter: 'pending' or 'completed'
+                    const matchStatus = !selectedStatus || t.status === selectedStatus;
+
+                    // 4. Subject filter: matching subject_id
+                    const matchSubjectSelect = !selectedSubject || String(t.subject_id) === String(selectedSubject);
+
+                    // Conjunctive combination (AND)
+                    return matchText && matchDateFrom && matchDateTo && matchStatus && matchSubjectSelect;
                 });
 
                 if (tasksList.length === 0) {
                     gridEl.style.display = 'none';
                     emptyStateEl.style.display = 'flex';
                     if (countLabelEl) countLabelEl.innerHTML = 'Exibindo <strong>0</strong> tarefas';
-                    if (totalTimeEl) totalTimeEl.innerHTML = 'Total: <strong>0 min</strong> de tempo estimado';
+                    if (totalTimeEl) totalTimeEl.innerHTML = 'Tempo estimado: <strong>0 min</strong>';
+                    if (spentTimeEl) spentTimeEl.innerHTML = 'Tempo de estudo: <strong>0 min</strong>';
                     return;
                 }
 
                 emptyStateEl.style.display = 'none';
                 gridEl.style.display = 'flex';
 
-                const totalEstimatedMinutes = tasksList.reduce((acc, curr) => acc + (Number(curr.estimated_time) || 0), 0);
+                const totalEstimatedMinutes = filtered.reduce((acc, curr) => acc + (Number(curr.estimated_time) || 0), 0);
+                const totalSpentMinutes = filtered
+                    .filter(t => t.status === 'completed' && t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '')
+                    .reduce((acc, curr) => acc + (Number(curr.spent_time) || 0), 0);
+
                 if (countLabelEl) countLabelEl.innerHTML = `Exibindo <strong>${filtered.length}</strong> de <strong>${tasksList.length}</strong> tarefas`;
-                if (totalTimeEl) totalTimeEl.innerHTML = `Total: <strong>${formatTimeMinutes(totalEstimatedMinutes)}</strong> de tempo estimado`;
+                if (totalTimeEl) totalTimeEl.innerHTML = `Tempo estimado: <strong>${formatTimeMinutes(totalEstimatedMinutes)}</strong>`;
+                if (spentTimeEl) spentTimeEl.innerHTML = `Tempo de estudo: <strong>${formatTimeMinutes(totalSpentMinutes)}</strong>`;
 
                 if (filtered.length === 0) {
                     gridEl.innerHTML = `
-                        <div style="text-align: center; padding: 40px; color: var(--text-muted); width: 100%;">
-                            <i class="fa-solid fa-magnifying-glass" style="font-size: 2rem; margin-bottom: 12px; opacity: 0.5;"></i>
-                            <p>Nenhuma tarefa encontrada para "${query}".</p>
+                        <div style="text-align: center; padding: 48px 20px; color: var(--text-muted); width: 100%;">
+                            <i class="fa-solid fa-filter-circle-xmark" style="font-size: 2.2rem; margin-bottom: 14px; opacity: 0.6; color: var(--accent-cyan);"></i>
+                            <h4 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 8px;">Nenhuma tarefa encontrada</h4>
+                            <p style="font-size: 0.9rem; max-width: 440px; margin: 0 auto 16px auto;">Nenhuma tarefa corresponde aos filtros selecionados. Tente ajustar os parâmetros ou limpar os filtros.</p>
+                            <button type="button" class="btn-secondary" onclick="window.clearAllFilters()" style="padding: 8px 18px; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-rotate-left"></i> Limpar Filtros
+                            </button>
                         </div>
                     `;
                     return;
@@ -1161,14 +1421,14 @@
                     : '';
 
                 const estimatedText = formatTimeMinutes(t.estimated_time);
-                const spentText = t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '' 
-                    ? formatTimeMinutes(t.spent_time) 
+                const spentText = t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== ''
+                    ? formatTimeMinutes(t.spent_time)
                     : null;
 
                 const timeLine = `<div class="task-info-item"><i class="fa-solid fa-hourglass-half"></i> <span>Estimado: ${estimatedText}${spentText ? ` | Gasto: ${spentText}` : ''}</span></div>`;
 
-                const descBox = t.description 
-                    ? `<div class="task-description-box"><i class="fa-solid fa-align-left" style="color:var(--accent-lilac); margin-right:4px;"></i> ${escapeHtml(t.description)}</div>` 
+                const descBox = t.description
+                    ? `<div class="task-description-box"><i class="fa-solid fa-align-left" style="color:var(--accent-lilac); margin-right:4px;"></i> ${escapeHtml(t.description)}</div>`
                     : '';
 
                 return `
@@ -1296,10 +1556,10 @@
                 btnSaveTask.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
 
                 try {
-                    const url = isEdit 
-                        ? `${tasksBaseUrl}/academic_tasks/${id}` 
+                    const url = isEdit
+                        ? `${tasksBaseUrl}/academic_tasks/${id}`
                         : `${tasksBaseUrl}/academic_tasks`;
-                    
+
                     const method = isEdit ? 'PATCH' : 'POST';
 
                     const response = await fetch(url, {
@@ -1366,10 +1626,45 @@
 
             if (searchInput) searchInput.addEventListener('input', renderTasks);
 
+            // Clear all filters function
+            function clearAllFilters() {
+                if (filterDateFrom) filterDateFrom.value = '';
+                if (filterDateTo) filterDateTo.value = '';
+                if (filterStatus) filterStatus.value = '';
+                if (filterSubject) filterSubject.value = '';
+                if (searchInput) searchInput.value = '';
+                renderTasks();
+            }
+            window.clearAllFilters = clearAllFilters;
+
+            // Event Listeners for Filter Controls
+            if (filterDateFrom) filterDateFrom.addEventListener('change', renderTasks);
+            if (filterDateTo) filterDateTo.addEventListener('change', renderTasks);
+            if (filterStatus) filterStatus.addEventListener('change', renderTasks);
+            if (filterSubject) filterSubject.addEventListener('change', renderTasks);
+            if (btnClearFilters) btnClearFilters.addEventListener('click', clearAllFilters);
+
+            // Toggle Filter Panel Visibility
+            if (btnFilterToggle && tasksFiltersBar) {
+                btnFilterToggle.addEventListener('click', () => {
+                    const isHidden = tasksFiltersBar.style.display === 'none';
+                    if (isHidden) {
+                        tasksFiltersBar.style.display = 'flex';
+                        btnFilterToggle.classList.add('active');
+                        btnFilterToggle.setAttribute('aria-expanded', 'true');
+                    } else {
+                        tasksFiltersBar.style.display = 'none';
+                        btnFilterToggle.classList.remove('active');
+                        btnFilterToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
             // Initial Data Fetching
             await fetchSubjects();
             await fetchTasks();
         });
     </script>
 </body>
+
 </html>

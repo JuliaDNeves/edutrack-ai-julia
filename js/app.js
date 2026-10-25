@@ -528,11 +528,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 metricPendingEl.textContent = pendingTasks.length;
             }
 
-            // Estimated time calculated ONLY for completed tasks
-            const completedMinutesTotal = completedTasks.reduce((sum, t) => sum + (Number(t.estimated_time) || 0), 0);
+            // Study time (Tempo de estudo) calculated ONLY for completed tasks with filled spent_time
+            const completedSpentMinutesTotal = completedTasks
+                .filter(t => t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '')
+                .reduce((sum, t) => sum + (Number(t.spent_time) || 0), 0);
             const metricEstimatedEl = document.getElementById('metric-estimated-time');
             if (metricEstimatedEl) {
-                metricEstimatedEl.textContent = formatHoursMinutes(completedMinutesTotal);
+                metricEstimatedEl.textContent = formatHoursMinutes(completedSpentMinutesTotal);
             }
 
             // 3. Study Time per Subject Chart
@@ -548,27 +550,53 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else {
                     const subjectTimes = subjects.map(s => {
                         const sTasks = completedTasks.filter(t => Number(t.subject_id) === Number(s.id));
-                        const totalMins = sTasks.reduce((sum, t) => sum + (Number(t.estimated_time) || 0), 0);
+                        
+                        // 1. Horas estimadas: soma de estimated_time das tarefas concluídas
+                        const estimatedMins = sTasks.reduce((sum, t) => sum + (Number(t.estimated_time) || 0), 0);
+
+                        // 2. Tempo de estudo: soma de spent_time quando preenchido; caso contrário usar estimated_time
+                        const studyMins = sTasks.reduce((sum, t) => {
+                            const hasSpent = t.spent_time !== null && t.spent_time !== undefined && t.spent_time !== '' && !isNaN(Number(t.spent_time));
+                            const val = hasSpent ? Number(t.spent_time) : (Number(t.estimated_time) || 0);
+                            return sum + val;
+                        }, 0);
+
                         return {
                             id: s.id,
                             name: s.name,
-                            minutes: totalMins,
-                            hours: totalMins / 60
+                            estimatedMins,
+                            studyMins
                         };
                     });
 
-                    const maxHours = Math.max(...subjectTimes.map(st => st.hours), 1);
+                    const allValues = subjectTimes.flatMap(st => [st.estimatedMins, st.studyMins]);
+                    const maxMins = Math.max(...allValues, 1);
 
-                    chartContainerEl.innerHTML = subjectTimes.map((st, idx) => {
-                        const fillPercent = st.hours > 0 ? Math.min(Math.max(Math.round((st.hours / maxHours) * 90), 15), 90) : 0;
-                        const colorClass = idx % 2 === 0 ? 'cyan' : 'lilac';
-                        const labelHours = formatHoursMinutes(st.minutes);
+                    chartContainerEl.innerHTML = subjectTimes.map(st => {
+                        const fillPercentEst = st.estimatedMins > 0 ? Math.min(Math.max(Math.round((st.estimatedMins / maxMins) * 88), 6), 90) : 0;
+                        const fillPercentStudy = st.studyMins > 0 ? Math.min(Math.max(Math.round((st.studyMins / maxMins) * 88), 6), 90) : 0;
+
+                        const labelEst = formatHoursMinutes(st.estimatedMins);
+                        const labelStudy = formatHoursMinutes(st.studyMins);
 
                         return `
                             <div class="chart-bar-group">
-                                <div class="bar-wrapper">
-                                    <span class="bar-tooltip">${labelHours}</span>
-                                    <div class="bar-fill ${colorClass}" style="height: ${fillPercent}%;"></div>
+                                <div class="dual-bars-wrapper">
+                                    <div class="chart-comparative-tooltip">
+                                        <div class="tooltip-subject-name">${escapeHtml(st.name)}</div>
+                                        <div class="tooltip-series-item">
+                                            <span class="tooltip-dot lilac"></span>
+                                            <span class="tooltip-series-label">Horas estimadas:</span>
+                                            <strong class="tooltip-series-value">${labelEst}</strong>
+                                        </div>
+                                        <div class="tooltip-series-item">
+                                            <span class="tooltip-dot cyan"></span>
+                                            <span class="tooltip-series-label">Tempo de estudo:</span>
+                                            <strong class="tooltip-series-value">${labelStudy}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="bar-fill lilac" style="height: ${fillPercentEst}%;" aria-label="Horas estimadas: ${labelEst}"></div>
+                                    <div class="bar-fill cyan" style="height: ${fillPercentStudy}%;" aria-label="Tempo de estudo: ${labelStudy}"></div>
                                 </div>
                                 <span class="bar-label" title="${escapeHtml(st.name)}">${escapeHtml(st.name)}</span>
                             </div>

@@ -723,8 +723,16 @@ body {
 
 .chart-header {
     display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.chart-header-subrow {
+    display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .chart-title h3 {
@@ -836,6 +844,134 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 90px;
+}
+
+/* Dual Comparative Bars and Legend */
+.chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.legend-dot.cyan {
+    background: #53dce3;
+    box-shadow: 0 0 8px rgba(83, 220, 227, 0.4);
+}
+
+.legend-dot.lilac {
+    background: #b19bf1;
+    box-shadow: 0 0 8px rgba(177, 155, 241, 0.4);
+}
+
+.dual-bars-wrapper {
+    width: 100%;
+    max-width: 52px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    position: relative;
+}
+
+.dual-bars-wrapper .bar-fill {
+    flex: 1;
+    min-width: 12px;
+    max-width: 22px;
+}
+
+/* Comparative Tooltip */
+.chart-comparative-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-card), 0 8px 24px rgba(0, 0, 0, 0.28);
+    backdrop-filter: var(--card-backdrop);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.78rem;
+    color: var(--text-main);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 195px;
+}
+
+.chart-bar-group:hover .chart-comparative-tooltip,
+.dual-bars-wrapper:hover .chart-comparative-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+.tooltip-subject-name {
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--text-main);
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2px;
+}
+
+.tooltip-series-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.tooltip-series-label {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tooltip-series-value {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.tooltip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.tooltip-dot.cyan {
+    background: #53dce3;
+    box-shadow: 0 0 6px rgba(83, 220, 227, 0.6);
+}
+
+.tooltip-dot.lilac {
+    background: #b19bf1;
+    box-shadow: 0 0 6px rgba(177, 155, 241, 0.6);
 }
 
 /* ==========================================================================

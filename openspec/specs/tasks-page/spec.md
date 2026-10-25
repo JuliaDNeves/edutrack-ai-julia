@@ -65,3 +65,48 @@ The system SHALL display tasks on `pages/tasks.html` organized into two distinct
 #### Scenario: Rendering grouped task list
 - **WHEN** tasks are loaded or status changes
 - **THEN** the system SHALL render completed tasks in the top section under "Concluídas" header with attenuated legibility-focused styles, and pending tasks in the section below under "Pendentes" header.
+
+### Requirement: Display Completed Study Time Metric
+The system SHALL calculate and display a "Tempo de estudo realizado" metric directly below the existing "Tempo estimado" display on `pages/tasks.html`. The metric SHALL compute the total sum of `spent_time` strictly from completed tasks (`status === 'completed'`) having a non-null, valid numeric `spent_time`. Pending tasks (`status === 'pending'`) SHALL NOT contribute to the completed study time calculation.
+
+#### Scenario: User views study time metrics with completed and pending tasks
+- **WHEN** an authenticated user opens `pages/tasks.html` with academic tasks loaded
+- **THEN** the system SHALL display the total estimated time summing `estimated_time` of all tasks, and immediately below it, display "Tempo de estudo realizado" summing `spent_time` only from completed tasks with filled values.
+
+#### Scenario: User toggles task status between pending and completed
+- **WHEN** user marks a pending task with a defined `spent_time` as completed, or unchecks a completed task to pending
+- **THEN** the system SHALL dynamically recalculate "Tempo de estudo realizado" and update the display in-place.
+
+#### Scenario: Completed task has empty or null spent time
+- **WHEN** a completed task has null, empty, or undefined `spent_time`
+- **THEN** the system SHALL treat its spent time contribution as zero without producing `NaN` or display errors.
+
+### Requirement: Multi-Criteria Task Filtering
+The system SHALL provide interactive filter controls on `pages/tasks.html` allowing authenticated users to filter their academic tasks by due date period (start date and end date), status ("Pendente", "Concluída", or all), and registered subject, combinable with each other and with the existing text search filter.
+
+#### Scenario: User filters tasks by due date period
+- **WHEN** an authenticated user selects a start date, an end date, or both in the date range filter inputs
+- **THEN** the system SHALL display only tasks whose scheduled date (`due_date`) falls within the specified date interval (inclusive), updating task counters and time totals dynamically.
+
+#### Scenario: User filters tasks by status
+- **WHEN** user selects a specific status ("Pendente" or "Concluída") from the status filter control
+- **THEN** the system SHALL display only tasks matching the selected status ("pending" or "completed") and update the displayed task counts accordingly.
+
+#### Scenario: User filters tasks by registered subject
+- **WHEN** user selects an active subject from the subject filter dropdown populated from their registered subjects
+- **THEN** the system SHALL display only tasks whose `subject_id` matches the selected subject ID.
+
+#### Scenario: User combines multiple filter criteria
+- **WHEN** user simultaneously selects a date range, a status, a subject, and enters a text search query
+- **THEN** the system SHALL filter task records conjunctively (AND logic), displaying only tasks that satisfy all active filter criteria simultaneously.
+
+### Requirement: Clear Task Filters
+The system SHALL provide an accessible clear filters control on `pages/tasks.html` that resets all active filter inputs and restores the full task list for the authenticated user.
+
+#### Scenario: User resets all applied filters
+- **WHEN** user triggers the "Limpar Filtros" button
+- **THEN** the system SHALL reset the start date, end date, status selector (to "Todos"), subject selector (to "Todas"), and search input (to empty), immediately re-rendering all tasks of the authenticated user and updating the metric totals.
+
+#### Scenario: No tasks match the applied filters
+- **WHEN** the combination of applied filters and search query yields zero matching task records
+- **THEN** the system SHALL display a clear empty state message informing that no tasks match the selected filters, while keeping filter controls fully interactive to allow adjustments or reset.
