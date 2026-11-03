@@ -990,10 +990,10 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="task-spent-time">Tempo Gasto (minutos)</label>
+                    <div class="form-group" id="form-group-spent-time" style="display: none;">
+                        <label for="task-spent-time" id="label-spent-time">Tempo Gasto (minutos)</label>
                         <input type="number" id="task-spent-time" class="form-control" placeholder="Ex: 45 (opcional)"
-                            min="0" step="1">
+                            min="0" step="1" disabled>
                     </div>
 
                     <div class="form-group">
@@ -1106,6 +1106,8 @@
             const dueDateInput = document.getElementById('task-due-date');
             const estimatedTimeInput = document.getElementById('task-estimated-time');
             const spentTimeInput = document.getElementById('task-spent-time');
+            const formGroupSpentTime = document.getElementById('form-group-spent-time');
+            const labelSpentTime = document.getElementById('label-spent-time');
             const descriptionInput = document.getElementById('task-description');
 
             const btnOpenCreate = document.getElementById('btn-open-create-modal');
@@ -1127,6 +1129,7 @@
             let tasksList = [];
             let subjectsMap = new Map(); // id -> name
             let deletingTaskId = null;
+            let isCompletingViaCheckbox = false;
 
             // Base URLs
             const tasksBaseUrl = EduTrackAuth.XANO_TASKS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:8PdLH3Ls';
@@ -1171,23 +1174,54 @@
                 return remMins > 0 ? `${hrs}h ${remMins}min` : `${hrs}h`;
             }
 
+            function updateSpentTimeVisibility(status, isMandatory = false) {
+                const isCompleted = status === 'completed';
+                if (formGroupSpentTime) {
+                    formGroupSpentTime.style.display = isCompleted ? 'flex' : 'none';
+                }
+                if (spentTimeInput) {
+                    spentTimeInput.disabled = !isCompleted;
+                    if (isCompleted) {
+                        if (isMandatory) {
+                            spentTimeInput.required = true;
+                            if (labelSpentTime) labelSpentTime.innerHTML = 'Tempo Gasto (minutos) *';
+                            spentTimeInput.placeholder = 'Ex: 45 (obrigatório)';
+                        } else {
+                            spentTimeInput.required = false;
+                            if (labelSpentTime) labelSpentTime.innerHTML = 'Tempo Gasto (minutos)';
+                            spentTimeInput.placeholder = 'Ex: 45 (opcional)';
+                        }
+                    } else {
+                        spentTimeInput.required = false;
+                        if (labelSpentTime) labelSpentTime.innerHTML = 'Tempo Gasto (minutos)';
+                    }
+                }
+            }
+
             function openCreateModal() {
+                isCompletingViaCheckbox = false;
                 formTask.reset();
                 taskIdInput.value = '';
                 statusSelect.value = 'pending';
+                updateSpentTimeVisibility('pending', false);
                 modalTitle.innerHTML = '<i class="fa-solid fa-plus-circle" style="color:#53dce3;"></i> Nova Tarefa';
                 taskModal.style.display = 'flex';
                 titleInput.focus();
             }
 
-            function openEditModal(task) {
+            function openEditModal(task, options = {}) {
+                isCompletingViaCheckbox = !!options.completingFromCheckbox;
                 formTask.reset();
                 taskIdInput.value = task.id;
-                modalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square" style="color:#53dce3;"></i> Editar Tarefa';
+                modalTitle.innerHTML = isCompletingViaCheckbox
+                    ? '<i class="fa-solid fa-circle-check" style="color:#53dce3;"></i> Concluir Tarefa'
+                    : '<i class="fa-solid fa-pen-to-square" style="color:#53dce3;"></i> Editar Tarefa';
 
                 titleInput.value = task.title || '';
                 subjectSelect.value = task.subject_id || '';
-                statusSelect.value = task.status || 'pending';
+
+                const currentStatus = isCompletingViaCheckbox ? 'completed' : (task.status || 'pending');
+                statusSelect.value = currentStatus;
 
                 // Format due_date for input[type="date"] (YYYY-MM-DD)
                 if (task.due_date) {
@@ -1201,13 +1235,22 @@
                 spentTimeInput.value = task.spent_time !== null && task.spent_time !== undefined ? task.spent_time : '';
                 descriptionInput.value = task.description || '';
 
+                updateSpentTimeVisibility(currentStatus, isCompletingViaCheckbox);
+
                 taskModal.style.display = 'flex';
-                titleInput.focus();
+                if (isCompletingViaCheckbox) {
+                    spentTimeInput.focus();
+                } else {
+                    titleInput.focus();
+                }
             }
 
             function closeModal() {
+                isCompletingViaCheckbox = false;
                 taskModal.style.display = 'none';
                 formTask.reset();
+                updateSpentTimeVisibility('pending', false);
+                renderTasks();
             }
 
             function openDeleteModal(task) {
@@ -1477,31 +1520,40 @@
                 const task = tasksList.find(t => t.id === id);
                 if (!task) return;
 
-                const oldStatus = task.status;
-                const newStatus = isChecked ? 'completed' : 'pending';
-
-                // Optimistic local update
-                task.status = newStatus;
-                renderTasks();
-
-                try {
-                    const response = await fetch(`${tasksBaseUrl}/academic_tasks/${id}`, {
-                        method: 'PATCH',
-                        headers: EduTrackAuth.getAuthHeaders(),
-                        body: JSON.stringify({ status: newStatus })
-                    });
-
-                    if (!response.ok) {
-                        const errData = await response.json().catch(() => ({}));
-                        throw new Error(errData.message || errData.error || 'Erro ao atualizar status da tarefa.');
-                    }
-
-                    showAlert(`Tarefa marcada como ${newStatus === 'completed' ? 'concluída' : 'pendente'}!`, 'success');
-                } catch (err) {
-                    console.error('Erro ao alternar status da tarefa:', err);
-                    task.status = oldStatus;
+                if (task.status === 'pending' && isChecked) {
+                    // Do not complete immediately: keep unchecked and open edit modal with completed status
                     renderTasks();
-                    showAlert(err.message || 'Não foi possível atualizar o status da tarefa.', 'error');
+                    openEditModal(task, { completingFromCheckbox: true });
+                    return;
+                }
+
+                if (task.status === 'completed' && !isChecked) {
+                    const oldStatus = task.status;
+                    const newStatus = 'pending';
+
+                    // Optimistic local update
+                    task.status = newStatus;
+                    renderTasks();
+
+                    try {
+                        const response = await fetch(`${tasksBaseUrl}/academic_tasks/${id}`, {
+                            method: 'PATCH',
+                            headers: EduTrackAuth.getAuthHeaders(),
+                            body: JSON.stringify({ status: newStatus })
+                        });
+
+                        if (!response.ok) {
+                            const errData = await response.json().catch(() => ({}));
+                            throw new Error(errData.message || errData.error || 'Erro ao atualizar status da tarefa.');
+                        }
+
+                        showAlert('Tarefa marcada como pendente!', 'success');
+                    } catch (err) {
+                        console.error('Erro ao alternar status da tarefa:', err);
+                        task.status = oldStatus;
+                        renderTasks();
+                        showAlert(err.message || 'Não foi possível atualizar o status da tarefa.', 'error');
+                    }
                 }
             };
 
@@ -1550,6 +1602,15 @@
                 if (isNaN(payload.estimated_time) || payload.estimated_time <= 0) {
                     showAlert('O tempo estimado deve ser maior que zero minutos.', 'error');
                     return;
+                }
+
+                if (isCompletingViaCheckbox) {
+                    const spentVal = spentTimeInput.value.trim() !== '' ? Number(spentTimeInput.value) : NaN;
+                    if (spentTimeInput.value.trim() === '' || isNaN(spentVal) || spentVal < 0) {
+                        showAlert('Informe o tempo gasto (em minutos) antes de confirmar a conclusão.', 'error');
+                        spentTimeInput.focus();
+                        return;
+                    }
                 }
 
                 btnSaveTask.disabled = true;
@@ -1620,6 +1681,17 @@
             if (btnEmptyCreate) btnEmptyCreate.addEventListener('click', openCreateModal);
             if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
             if (btnCancelTask) btnCancelTask.addEventListener('click', closeModal);
+            if (taskModal) {
+                taskModal.addEventListener('click', (e) => {
+                    if (e.target === taskModal) closeModal();
+                });
+            }
+
+            if (statusSelect) {
+                statusSelect.addEventListener('change', () => {
+                    updateSpentTimeVisibility(statusSelect.value, isCompletingViaCheckbox);
+                });
+            }
 
             if (btnCloseDeleteModal) btnCloseDeleteModal.addEventListener('click', closeDeleteModal);
             if (btnCancelDelete) btnCancelDelete.addEventListener('click', closeDeleteModal);
