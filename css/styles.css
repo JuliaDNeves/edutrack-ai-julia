@@ -451,6 +451,41 @@ body {
     gap: 16px;
 }
 
+.btn-report-download {
+    background: var(--gradient-primary);
+    color: var(--brand-icon-text, #ffffff);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    white-space: nowrap;
+    box-shadow: var(--shadow-cyan);
+}
+
+.btn-report-download i {
+    font-size: 1rem;
+}
+
+.btn-report-download:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(var(--accent-cyan-rgb), 0.35);
+}
+
+.btn-report-download:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 .search-box {
     position: relative;
     width: 360px;

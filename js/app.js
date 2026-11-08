@@ -736,4 +736,177 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // ==========================================================================
+    // 7. Academic Report Generation & Download Handler (ReportLab PDF / Xano)
+    // ==========================================================================
+    const btnDownloadReport = document.getElementById('btn-download-report');
+    if (btnDownloadReport && typeof EduTrackAuth !== 'undefined') {
+        btnDownloadReport.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const originalHtml = btnDownloadReport.innerHTML;
+            btnDownloadReport.disabled = true;
+            btnDownloadReport.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Gerando PDF...</span>';
+
+            try {
+                // 1. Obter dados reais e autenticados do estudante, disciplinas e tarefas
+                const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
+                const tasksBaseUrl = EduTrackAuth.XANO_TASKS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:8PdLH3Ls';
+
+                const [user, subjectsRes, tasksRes] = await Promise.all([
+                    EduTrackAuth.getMe(),
+                    fetch(`${subjectsBaseUrl}/subjects`, { headers: EduTrackAuth.getAuthHeaders() }),
+                    fetch(`${tasksBaseUrl}/academic_tasks`, { headers: EduTrackAuth.getAuthHeaders() })
+                ]);
+
+                const subjectsData = subjectsRes.ok ? await subjectsRes.json() : [];
+                const tasksData = tasksRes.ok ? await tasksRes.json() : [];
+
+                const payload = {
+                    user: {
+                        id: user.id,
+                        name: user.name && user.name.trim() !== '' ? user.name : user.email.split('@')[0],
+                        email: user.email
+                    },
+                    subjects: Array.isArray(subjectsData) ? subjectsData : [],
+                    tasks: Array.isArray(tasksData) ? tasksData : [],
+                    generated_at: new Date().toISOString()
+                };
+
+                // 2. Tentar gerar e obter o PDF real a partir do serviço ReportLab (local ou Xano)
+                const localPdfUrl = (EduTrackAuth.LOCAL_REPORTS_URL || 'http://127.0.0.1:5001/api') + '/academic_reports/pdf';
+                const xanoPdfUrl = (EduTrackAuth.XANO_REPORTS_URL || EduTrackAuth.XANO_BASE_URL) + '/academic_reports/pdf';
+
+                let pdfBlob = null;
+
+                // Tentativa 1: Serviço de geração PDF ReportLab (porta 5001)
+                try {
+                    const localRes = await fetch(localPdfUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/pdf'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (localRes.ok) {
+                        const contentType = localRes.headers.get('content-type') || '';
+                        if (contentType.includes('application/pdf')) {
+                            const rawBlob = await localRes.blob();
+                            pdfBlob = new Blob([rawBlob], { type: 'application/pdf' });
+                        }
+                    }
+                } catch (localErr) {
+                    // Serviço local indisponível, tentar backend Xano
+                }
+
+                // Tentativa 2: Endpoint backend Xano se o serviço local não respondeu
+                if (!pdfBlob) {
+                    try {
+                        const xanoRes = await fetch(xanoPdfUrl, {
+                            method: 'POST',
+                            headers: {
+                                ...EduTrackAuth.getAuthHeaders(),
+                                'Accept': 'application/pdf'
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (xanoRes.ok) {
+                            const contentType = xanoRes.headers.get('content-type') || '';
+                            if (contentType.includes('application/pdf')) {
+                                const rawBlob = await xanoRes.blob();
+                                pdfBlob = new Blob([rawBlob], { type: 'application/pdf' });
+                            } else {
+                                const resJson = await xanoRes.json().catch(() => null);
+                                if (resJson && resJson.pdf_base64) {
+                                    const byteChars = atob(resJson.pdf_base64);
+                                    const byteNums = new Array(byteChars.length);
+                                    for (let i = 0; i < byteChars.length; i++) {
+                                        byteNums[i] = byteChars.charCodeAt(i);
+                                    }
+                                    pdfBlob = new Blob([new Uint8Array(byteNums)], { type: 'application/pdf' });
+                                }
+                            }
+                        }
+                    } catch (xanoErr) {
+                        // Backend Xano não respondeu com PDF
+                    }
+                }
+
+                // 3. Efetuar download do arquivo .pdf real ou exibir erro claro
+                if (pdfBlob && pdfBlob.size > 0) {
+                    triggerBrowserDownload(pdfBlob, `edutrack-relatorio-${getDateStamp()}.pdf`);
+                    showReportToast('Relatório acadêmico em PDF gerado com sucesso!', 'success');
+                } else {
+                    console.error('Falha na geração do PDF: nenhum serviço retornou application/pdf válido.');
+                    showReportToast('Serviço de geração de PDF indisponível. Inicie o servidor Python (scripts/report_server.py).', 'error');
+                }
+
+            } catch (err) {
+                console.error('Erro ao gerar relatório acadêmico:', err);
+                showReportToast('Falha ao gerar o relatório acadêmico. Verifique suas credenciais.', 'error');
+            } finally {
+                btnDownloadReport.disabled = false;
+                btnDownloadReport.innerHTML = originalHtml;
+            }
+        });
+    }
+
+    function triggerBrowserDownload(blob, filename) {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
+
+    function getDateStamp() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function showReportToast(message, type = 'info') {
+        const existing = document.getElementById('report-feedback-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.id = 'report-feedback-toast';
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: ${type === 'error' ? '#ef4444' : 'var(--gradient-primary, #0284c7)'};
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            font-size: 0.88rem;
+            font-weight: 600;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        `;
+        const iconClass = type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check';
+        toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> <span>${escapeHtml(message)}</span>`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.4s ease';
+                setTimeout(() => {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 400);
+            }
+        }, 4000);
+    }
+
 });
