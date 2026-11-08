@@ -47,7 +47,7 @@ A rotina universitária envolve diferentes tipos de informação:
                    └─────────────────┘
 ```
 
-O EduTrack busca transformar essas informações em uma experiência centralizada, permitindo que o estudante acompanhe sua rotina de maneira mais organizada e visual.
+O EduTrack busca transformar essas informações em uma experiência centralizada, permitindo que o estudante acompanhe sua rotina de maneira mais organizada e moderna.
 
 ---
 
