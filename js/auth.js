@@ -6,6 +6,8 @@ const EduTrackAuth = (() => {
     const XANO_BASE_URL = 'https://x8ki-letl-twmt.n7.xano.io/api:kAYAUbt7';
     const XANO_SUBJECTS_URL = 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
     const XANO_TASKS_URL = 'https://x8ki-letl-twmt.n7.xano.io/api:8PdLH3Ls';
+    const XANO_REPORTS_URL = 'https://x8ki-letl-twmt.n7.xano.io/api:academic_reports';
+    const LOCAL_REPORTS_URL = 'http://127.0.0.1:5001/api';
     const TOKEN_KEY = 'edutrack_token';
 
     // ==========================================================================
@@ -183,6 +185,8 @@ const EduTrackAuth = (() => {
         XANO_BASE_URL,
         XANO_SUBJECTS_URL,
         XANO_TASKS_URL,
+        XANO_REPORTS_URL,
+        LOCAL_REPORTS_URL,
         getToken,
         setToken,
         removeToken,
