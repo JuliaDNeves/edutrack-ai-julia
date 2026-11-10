@@ -17,11 +17,11 @@ The system SHALL provide navigation linking `dashboard.html`, `disciplinas.html`
 - **THEN** the sidebar transitions into a fixed bottom navigation bar displaying icons only with active state highlight and adequate page bottom padding
 
 ### Requirement: Header Section with Greeting and Search Bar
-The system SHALL render a top header section featuring a user greeting, a study motivation tip, and an expanded visual search bar, without any notification button.
+The system SHALL render a top header section featuring a user greeting and a study motivation tip, omitting the visual search bar and notification buttons.
 
 #### Scenario: Display header elements
 - **WHEN** the user views the header bar
-- **THEN** the system displays the user greeting, motivation subtext, and a widened search bar, while omitting notification icons and badges
+- **THEN** the system SHALL display the user greeting and motivation subtext, while omitting the search bar, notification icons, and badges
 
 ### Requirement: Tasks Progress Summary Card
 The system SHALL calculate and display the authenticated user's real task progress metrics dynamically based on tasks retrieved from `GET /academic_tasks`. When any task status is modified via the side panel checkboxes, the system SHALL update completion percentage `(completed_tasks / total_tasks) * 100`, radial progress circle text, progress fill bar width, and counts of completed and pending tasks in real-time.
@@ -64,11 +64,11 @@ Both series SHALL be visually differentiated using distinct colors from the EduT
 - **THEN** the "Tempo de estudo" series for that subject SHALL fall back to using the task's `estimated_time`.
 
 ### Requirement: Right Side User Panel and Upcoming Tasks
-The system SHALL render a right side panel containing student profile info without streak tags, along with a list of up to 6 upcoming real pending tasks retrieved from `GET /academic_tasks`. Pending tasks SHALL be ordered by `due_date` ascending (earliest due date first), displaying the task title, formatted due date/deadline, and associated subject name.
+The system SHALL render a right side panel containing student profile info, followed immediately by the "Relatório PDF" action button, and positioned above the list of up to 6 upcoming real pending tasks retrieved from `GET /academic_tasks`. Pending tasks SHALL be ordered by `due_date` ascending (earliest due date first), displaying the task title, formatted due date/deadline, and associated subject name.
 
 #### Scenario: Render right panel profile without streak metric
 - **WHEN** the user views the right side panel
-- **THEN** the system displays student profile details without "5 dias seguidos" or flame streak badges, and renders up to 6 real pending tasks sorted by due date, showing title, due date, and subject tag.
+- **THEN** the system SHALL display student profile details without "5 dias seguidos" or flame streak badges, display the "Relatório PDF" action button positioned directly below the profile card and above the upcoming tasks list, and render up to 6 real pending tasks sorted by due date, showing title, due date, and subject tag
 
 ### Requirement: Visual Account Switcher Action
 The system SHALL display a visual account/logout action on desktop profile hover and an adapted mobile profile trigger without requiring authentication backend logic.
