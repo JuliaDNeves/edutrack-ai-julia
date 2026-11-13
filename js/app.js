@@ -944,6 +944,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (insightsErrorCard) insightsErrorCard.style.display = 'none';
 
         try {
+            // Garante o carregamento dos dados acadêmicos caso ainda não estejam disponíveis
+            if ((!currentDashboardSubjects || currentDashboardSubjects.length === 0) &&
+                (!currentDashboardTasks || currentDashboardTasks.length === 0) &&
+                typeof EduTrackAuth !== 'undefined') {
+                try {
+                    const subjectsBaseUrl = EduTrackAuth.XANO_SUBJECTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:asoARar9';
+                    const tasksBaseUrl = EduTrackAuth.XANO_TASKS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:8PdLH3Ls';
+
+                    const [subjectsRes, tasksRes] = await Promise.all([
+                        fetch(`${subjectsBaseUrl}/subjects`, { headers: EduTrackAuth.getAuthHeaders() }),
+                        fetch(`${tasksBaseUrl}/academic_tasks`, { headers: EduTrackAuth.getAuthHeaders() })
+                    ]);
+
+                    if (subjectsRes.ok) {
+                        const sData = await subjectsRes.json();
+                        currentDashboardSubjects = Array.isArray(sData) ? sData : [];
+                    }
+                    if (tasksRes.ok) {
+                        const tData = await tasksRes.json();
+                        currentDashboardTasks = Array.isArray(tData) ? tData : [];
+                    }
+                } catch (loadErr) {
+                    console.warn('Tentativa de carregar dados antes dos insights:', loadErr);
+                }
+            }
+
+            if (!currentDashboardUser && typeof EduTrackAuth !== 'undefined' && EduTrackAuth.isAuthenticated()) {
+                try {
+                    currentDashboardUser = await EduTrackAuth.getMe();
+                } catch (uErr) {
+                    console.warn('Não foi possível obter dados do usuário para insights:', uErr);
+                }
+            }
+
             // Prepara o payload acadêmico estruturado para o motor de insights
             const payload = {
                 user: currentDashboardUser || { id: 1, name: 'Estudante' },

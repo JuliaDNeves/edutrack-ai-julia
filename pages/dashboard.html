@@ -49,15 +49,21 @@
                         </a>
                     </li>
                     <li class="nav-item" id="nav-disciplinas">
-                        <a href="../pages/subjects.html" aria-label="Disciplinas">
+                        <a href="subjects.html" aria-label="Disciplinas">
                             <i class="fa-solid fa-book-bookmark"></i>
                             <span>Disciplinas</span>
                         </a>
                     </li>
                     <li class="nav-item" id="nav-tarefas">
-                        <a href="../pages/tasks.html" aria-label="Tarefas">
+                        <a href="tasks.html" aria-label="Tarefas">
                             <i class="fa-solid fa-list-check"></i>
                             <span>Tarefas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="nav-insights">
+                        <a href="insights.html" aria-label="Insights">
+                            <i class="fa-solid fa-brain"></i>
+                            <span>Insights</span>
                         </a>
                     </li>
                     <li class="nav-item" id="nav-configuracoes">
@@ -205,98 +211,6 @@
 
                 <div class="chart-container" id="study-chart-container">
                     <!-- Dynamic chart bars rendered via JavaScript -->
-                </div>
-            </section>
-
-            <!-- ==========================================================================
-                 Intelligent Insights Section (Análise com IA & Recomendações)
-                 ========================================================================== -->
-            <section class="insights-section" id="insights-section">
-                <div class="insights-header">
-                    <div class="insights-title-group">
-                        <div class="insights-badge-icon">
-                            <i class="fa-solid fa-brain"></i>
-                        </div>
-                        <div>
-                            <div class="insights-title-row">
-                                <h3>Insights Inteligentes</h3>
-                                <div id="insights-engine-badge" class="insights-engine-badge" style="display: none;"></div>
-                            </div>
-                            <p>Análise acadêmica contextualizada e recomendações personalizadas</p>
-                        </div>
-                    </div>
-                    <button type="button" class="btn-insights-trigger" id="btn-generate-insights">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span id="btn-insights-text">Gerar insights</span>
-                    </button>
-                </div>
-
-                <!-- Estado Inicial / Convite (On-demand) -->
-                <div class="insights-placeholder" id="insights-placeholder">
-                    <div class="placeholder-icon">
-                        <i class="fa-solid fa-sparkles"></i>
-                    </div>
-                    <h4>Descubra recomendações inteligentes para seus estudos</h4>
-                    <p>Clique em <strong>"Gerar insights"</strong> para que o sistema analise seu tempo de estudo, taxa de conclusão e histórico de tarefas, fornecendo orientações práticas e diagnósticos personalizados.</p>
-                </div>
-
-                <!-- Feedback de Erro -->
-                <div class="insights-error-card" id="insights-error-card" style="display: none;">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <div class="insights-error-content">
-                        <h4 id="insights-error-title">Não foi possível carregar os insights</h4>
-                        <p id="insights-error-desc">Verifique sua conexão ou se o serviço de insights está ativo e tente novamente.</p>
-                    </div>
-                    <button type="button" class="btn-insights-retry" id="btn-insights-retry">
-                        <i class="fa-solid fa-rotate-right"></i> Tentar novamente
-                    </button>
-                </div>
-
-                <!-- Grade de Resultados (Cards) -->
-                <div class="insights-results-grid" id="insights-results-grid" style="display: none;">
-                    
-                    <!-- Card 1: Resumo Geral -->
-                    <article class="insight-card full-width" id="card-insight-summary">
-                        <div class="insight-card-header">
-                            <div class="card-icon cyan"><i class="fa-solid fa-clipboard-check"></i></div>
-                            <h4>Resumo Geral</h4>
-                        </div>
-                        <p class="insight-summary-text" id="insight-summary-content">Carregando síntese...</p>
-                    </article>
-
-                    <!-- Card 2: Diagnósticos por Disciplina -->
-                    <article class="insight-card full-width" id="card-insight-diagnostics">
-                        <div class="insight-card-header">
-                            <div class="card-icon lilac"><i class="fa-solid fa-chart-line"></i></div>
-                            <h4>Diagnósticos por Disciplina</h4>
-                        </div>
-                        <div class="diagnostics-list" id="insight-diagnostics-list">
-                            <!-- Renderizado dinamicamente via JS -->
-                        </div>
-                    </article>
-
-                    <!-- Card 3: Recomendações Práticas -->
-                    <article class="insight-card" id="card-insight-recommendations">
-                        <div class="insight-card-header">
-                            <div class="card-icon cyan"><i class="fa-solid fa-lightbulb"></i></div>
-                            <h4>Recomendações Práticas</h4>
-                        </div>
-                        <ul class="insights-bullet-list" id="insight-recommendations-list">
-                            <!-- Renderizado dinamicamente via JS -->
-                        </ul>
-                    </article>
-
-                    <!-- Card 4: Pontos Fortes -->
-                    <article class="insight-card" id="card-insight-strengths">
-                        <div class="insight-card-header">
-                            <div class="card-icon lilac"><i class="fa-solid fa-star"></i></div>
-                            <h4>Pontos Fortes</h4>
-                        </div>
-                        <ul class="insights-bullet-list strengths-list" id="insight-strengths-list">
-                            <!-- Renderizado dinamicamente via JS -->
-                        </ul>
-                    </article>
-
                 </div>
             </section>
 
