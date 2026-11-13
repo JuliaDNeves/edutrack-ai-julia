@@ -3,7 +3,7 @@
     "id": 379353,
     "type": "api_group",
     "path": "apis/authentication/api_group.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "7ae3dc6035453f234992e30a7f108e7ab2546a034cdd4b2fb3be2d22adaed59d",
     "original": "Ly8gVGhpcyBncm91cCBwcm92aWRlcyBlbmRwb2ludHMgZm9yIHVzZXIgbG9naW4sIHNpZ251cCwgYW5kIHJlc2V0IHBhc3N3b3JkLCByZXR1cm5pbmcgYXV0aGVudGljYXRpb24gdG9rZW5zIGFuZCB1c2VyIHJlY29yZHMuCmFwaV9ncm91cCBBdXRoZW50aWNhdGlvbiB7CiAgY2Fub25pY2FsID0gImtBWUFVYnQ3IgogIHN3YWdnZXIgPSB7YWN0aXZlOiBmYWxzZX0KICB0YWdzID0gWyJ4YW5vOnF1aWNrLXN0YXJ0Il0KfQ=="
@@ -192,7 +192,7 @@
     "id": 112543,
     "type": "addon",
     "path": "addons/112543_user.xs",
-    "status": "unchanged",
+    "status": "changed",
     "staged": false,
     "sha256": "c12b6a2f4706c8017e4442f747981c13e840544bfa4d5844b68f5b6eed16bf9b",
     "original": "YWRkb24gdXNlciB7CiAgaW5wdXQgewogICAgaW50IHVzZXJfaWQ/IHsKICAgICAgdGFibGUgPSAidXNlciIKICAgIH0KICB9CgogIHN0YWNrIHsKICAgIGRiLnF1ZXJ5ICIiIHsKICAgICAgd2hlcmUgPSAkZGIudXNlci5pZCA9PSAkaW5wdXQudXNlcl9pZAogICAgICByZXR1cm4gPSB7dHlwZTogImxpc3QifQogICAgfQogIH0KfQ=="
@@ -218,7 +218,7 @@
   {
     "id": 434822,
     "path": "apis/subjects/api_group.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_group",
     "staged": false,
     "sha256": "4031c48dcef2fe519891e079e55ad68d2a39b63614aa17075da1464a7d961c27",
@@ -326,7 +326,7 @@
   {
     "id": 435468,
     "path": "apis/academic_tasks/api_group.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_group",
     "staged": false,
     "sha256": "9de394b3658f0d594c7303e5ab14ffeb525e7247ac5139d368d8ba0ba67c63cf",
@@ -371,7 +371,7 @@
   {
     "id": 439567,
     "path": "apis/academic_reports/api_group.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_group",
     "staged": false,
     "sha256": "b75031d4ea4f5cb22c41eb59f6fce0454778c7358ef83376273ebe70295ed524",
@@ -380,7 +380,7 @@
   {
     "id": 4119758,
     "path": "apis/academic_reports/get_academic_report_data.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_endpoint",
     "staged": false,
     "sha256": "7a81051770b97ef77e2a087b5d5fba6e96609455166ea509b87c2155860e0c67",
@@ -389,10 +389,24 @@
   {
     "id": 4119759,
     "path": "apis/academic_reports/post_academic_report_pdf.xs",
-    "status": "unchanged",
+    "status": "changed",
     "type": "api_endpoint",
     "staged": false,
     "sha256": "a40d11d5223c19e884bf12e22956fe17874f92888b1bafe875b9ff887b349362",
     "original": "Ly8gR2VuZXJhdGUgYWNhZGVtaWMgcmVwb3J0IGZvciB0aGUgYXV0aGVudGljYXRlZCB1c2VyCnF1ZXJ5ICJhY2FkZW1pY19yZXBvcnRzL3BkZiIgdmVyYj1QT1NUIHsKICBhcGlfZ3JvdXAgPSAiQWNhZGVtaWNfUmVwb3J0cyIKICBhdXRoID0gInVzZXIiCgogIGlucHV0IHsKICB9CgogIHN0YWNrIHsKICAgIC8vIDEuIEdldCBhdXRoZW50aWNhdGVkIHVzZXIgcmVjb3JkCiAgICBkYi5nZXQgdXNlciB7CiAgICAgIGZpZWxkX25hbWUgPSAiaWQiCiAgICAgIGZpZWxkX3ZhbHVlID0gJGF1dGguaWQKICAgICAgb3V0cHV0ID0gWyJpZCIsICJuYW1lIiwgImVtYWlsIl0KICAgIH0gYXMgJHVzZXJfcHJvZmlsZQogIAogICAgLy8gMi4gUXVlcnkgYWxsIHN1YmplY3RzIGJlbG9uZ2luZyB0byB0aGUgYXV0aGVudGljYXRlZCB1c2VyCiAgICBkYi5xdWVyeSBzdWJqZWN0cyB7CiAgICAgIHdoZXJlID0gJGRiLnN1YmplY3RzLnVzZXJfaWQgPT0gJGF1dGguaWQKICAgICAgcmV0dXJuID0ge3R5cGU6ICJsaXN0In0KICAgIH0gYXMgJHN1YmplY3RzCiAgCiAgICAvLyAzLiBRdWVyeSBhbGwgYWNhZGVtaWMgdGFza3MgYmVsb25naW5nIHRvIHRoZSBhdXRoZW50aWNhdGVkIHVzZXIKICAgIGRiLnF1ZXJ5IGFjYWRlbWljX3Rhc2tzIHsKICAgICAgd2hlcmUgPSAkZGIuYWNhZGVtaWNfdGFza3MudXNlcl9pZCA9PSAkYXV0aC5pZAogICAgICByZXR1cm4gPSB7dHlwZTogImxpc3QifQogICAgfSBhcyAkdGFza3MKICAKICAgIC8vIDQuIFJldHVybiByZXBvcnQgZGF0YXNldCBmb3IgUmVwb3J0TGFiIHJlbmRlcmluZwogICAgdmFyICRyZXBvcnRfcmVzcG9uc2UgewogICAgICB2YWx1ZSA9IHsKICAgICAgICBzdGF0dXMgIDogInN1Y2Nlc3MiCiAgICAgICAgdXNlciAgICA6IHsKICAgICAgICAgIGlkICAgOiAkdXNlcl9wcm9maWxlLmlkCiAgICAgICAgICBuYW1lIDogJHVzZXJfcHJvZmlsZS5uYW1lCiAgICAgICAgICBlbWFpbDogJHVzZXJfcHJvZmlsZS5lbWFpbAogICAgICAgIH0KICAgICAgICBzdWJqZWN0czogJHN1YmplY3RzCiAgICAgICAgdGFza3MgICA6ICR0YXNrcwogICAgICB9CiAgICB9CiAgfQoKICByZXNwb25zZSA9ICRyZXBvcnRfcmVzcG9uc2UKfQ=="
+  },
+  {
+    "id": 0,
+    "path": "apis/insights/api_group.xs",
+    "status": "new",
+    "type": "api_group",
+    "staged": false
+  },
+  {
+    "id": 0,
+    "path": "apis/insights/post_academic_insights.xs",
+    "status": "new",
+    "type": "api_endpoint",
+    "staged": false
   }
 ]

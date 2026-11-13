@@ -394,6 +394,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ==========================================================================
     // 5. Dashboard Guard & User Profile Hydration (auth/me)
     // ==========================================================================
+    let currentDashboardUser = null;
+    let currentDashboardSubjects = [];
+    let currentDashboardTasks = [];
+
     const isDashboardPage = !!document.getElementById('welcome-user-heading') || !!document.getElementById('user-name-sidebar');
     if (isDashboardPage && typeof EduTrackAuth !== 'undefined') {
         if (!EduTrackAuth.isAuthenticated()) {
@@ -403,6 +407,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             const user = await EduTrackAuth.getMe();
+            currentDashboardUser = user;
             const displayName = user.name && user.name.trim() !== '' ? user.name : user.email.split('@')[0];
             const initials = EduTrackAuth.getInitials(user.name, user.email);
 
@@ -476,6 +481,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const subjects = Array.isArray(subjectsData) ? subjectsData : [];
             const tasks = Array.isArray(tasksData) ? tasksData : [];
+
+            currentDashboardSubjects = subjects;
+            currentDashboardTasks = tasks;
 
             // 1. Task Progress Calculation
             const completedTasks = tasks.filter(t => t.status === 'completed');
@@ -907,6 +915,195 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }, 400);
             }
         }, 4000);
+    }
+
+    // ==========================================================================
+    // 8. Intelligent Insights Handler (Dashboard IA & Recomendações sob Demanda)
+    // ==========================================================================
+    const btnGenerateInsights = document.getElementById('btn-generate-insights');
+    const btnInsightsRetry = document.getElementById('btn-insights-retry');
+    const insightsPlaceholder = document.getElementById('insights-placeholder');
+    const insightsResultsGrid = document.getElementById('insights-results-grid');
+    const insightsErrorCard = document.getElementById('insights-error-card');
+    const insightsEngineBadge = document.getElementById('insights-engine-badge');
+
+    if (btnGenerateInsights) {
+        btnGenerateInsights.addEventListener('click', () => handleGenerateInsights());
+    }
+    if (btnInsightsRetry) {
+        btnInsightsRetry.addEventListener('click', () => handleGenerateInsights());
+    }
+
+    async function handleGenerateInsights() {
+        if (!btnGenerateInsights) return;
+
+        const originalBtnHtml = btnGenerateInsights.innerHTML;
+        btnGenerateInsights.disabled = true;
+        btnGenerateInsights.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Gerando insights com IA...</span>';
+
+        if (insightsErrorCard) insightsErrorCard.style.display = 'none';
+
+        try {
+            // Prepara o payload acadêmico estruturado para o motor de insights
+            const payload = {
+                user: currentDashboardUser || { id: 1, name: 'Estudante' },
+                subjects: currentDashboardSubjects || [],
+                tasks: currentDashboardTasks || []
+            };
+
+            const localInsightsUrl = (EduTrackAuth.LOCAL_INSIGHTS_URL || 'http://127.0.0.1:5002/api') + '/insights';
+            const xanoInsightsUrl = (EduTrackAuth.XANO_INSIGHTS_URL || 'https://x8ki-letl-twmt.n7.xano.io/api:insights') + '/academic_insights';
+
+            let resultData = null;
+
+            // Tentativa 1: Serviço local de insights (porta 5002)
+            try {
+                const localRes = await fetch(localInsightsUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (localRes.ok) {
+                    resultData = await localRes.json();
+                }
+            } catch (localErr) {
+                console.warn('Serviço local de insights não acessível, tentando Xano...', localErr);
+            }
+
+            // Tentativa 2: Endpoint no Xano
+            if (!resultData && typeof EduTrackAuth !== 'undefined') {
+                try {
+                    const xanoRes = await fetch(xanoInsightsUrl, {
+                        method: 'POST',
+                        headers: EduTrackAuth.getAuthHeaders(),
+                        body: JSON.stringify(payload)
+                    });
+                    if (xanoRes.ok) {
+                        resultData = await xanoRes.json();
+                    }
+                } catch (xanoErr) {
+                    console.warn('Falha na chamada ao endpoint Xano de insights:', xanoErr);
+                }
+            }
+
+            if (!resultData || !resultData.insights) {
+                throw new Error('Não foi possível obter a análise de insights no momento.');
+            }
+
+            // Renderiza os dados recebidos nos cards estruturados
+            renderInsightsData(resultData);
+
+            if (insightsPlaceholder) insightsPlaceholder.style.display = 'none';
+            if (insightsResultsGrid) insightsResultsGrid.style.display = 'grid';
+
+            btnGenerateInsights.innerHTML = '<i class="fa-solid fa-rotate"></i> <span>Atualizar insights</span>';
+
+        } catch (err) {
+            console.error('Erro ao gerar insights inteligentes:', err);
+            if (insightsErrorCard) {
+                const descEl = document.getElementById('insights-error-desc');
+                if (descEl) descEl.textContent = err.message || 'Verifique sua conexão ou se o serviço de insights está ativo e tente novamente.';
+                insightsErrorCard.style.display = 'flex';
+            }
+            btnGenerateInsights.innerHTML = originalBtnHtml;
+        } finally {
+            btnGenerateInsights.disabled = false;
+        }
+    }
+
+    function renderInsightsData(data) {
+        const insights = data.insights || {};
+        const engine = data.ai_engine || {};
+
+        // 1. Badge Indicador de Motor (IA vs Fallback)
+        if (insightsEngineBadge) {
+            if (engine.status === 'success') {
+                insightsEngineBadge.className = 'insights-engine-badge badge-ai';
+                insightsEngineBadge.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Gerado com IA</span>';
+                insightsEngineBadge.title = 'Análise processada pelo modelo de linguagem Google Gemini';
+            } else {
+                insightsEngineBadge.className = 'insights-engine-badge badge-fallback';
+                insightsEngineBadge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> <span>Regras Heurísticas / Modo Offline</span>';
+                insightsEngineBadge.title = 'Análise gerada pelo motor determinístico de contingência';
+            }
+            insightsEngineBadge.style.display = 'inline-flex';
+        }
+
+        // 2. Card 1: Resumo Geral
+        const summaryContentEl = document.getElementById('insight-summary-content');
+        if (summaryContentEl) {
+            summaryContentEl.textContent = insights.resumo_geral || 'Nenhum resumo acadêmico gerado.';
+        }
+
+        // 3. Card 2: Diagnósticos por Disciplina
+        const diagnosticsListEl = document.getElementById('insight-diagnostics-list');
+        if (diagnosticsListEl) {
+            const diags = insights.diagnosticos_disciplinas || [];
+            if (diags.length === 0) {
+                diagnosticsListEl.innerHTML = '<p class="diagnostic-text">Nenhuma disciplina cadastrada para diagnóstico.</p>';
+            } else {
+                diagnosticsListEl.innerHTML = diags.map(d => {
+                    let tagClass = 'sem_dados';
+                    let tagLabel = 'Sem Tempo Registrado';
+
+                    const status = (d.status_tempo || '').toLowerCase();
+                    if (status === 'subestimado') {
+                        tagClass = 'subestimado';
+                        tagLabel = 'Tempo Subestimado';
+                    } else if (status === 'superestimado') {
+                        tagClass = 'superestimado';
+                        tagLabel = 'Tempo Superestimado';
+                    } else if (status === 'dentro_esperado') {
+                        tagClass = 'dentro_esperado';
+                        tagLabel = 'Dentro do Esperado';
+                    }
+
+                    return `
+                        <div class="diagnostic-item">
+                            <div class="diagnostic-item-top">
+                                <span class="diagnostic-subject-name">${escapeHtml(d.subject_name || 'Disciplina')}</span>
+                                <span class="status-tag ${tagClass}">
+                                    <i class="fa-solid fa-circle-info"></i> ${tagLabel}
+                                </span>
+                            </div>
+                            <p class="diagnostic-text">${escapeHtml(d.diagnostico || '')}</p>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // 4. Card 3: Recomendações Práticas
+        const recommendationsListEl = document.getElementById('insight-recommendations-list');
+        if (recommendationsListEl) {
+            const recs = insights.recomendacoes_praticas || [];
+            if (recs.length === 0) {
+                recommendationsListEl.innerHTML = '<li><i class="fa-solid fa-circle-check"></i> <span>Tudo em dia! Mantenha a consistência em seus estudos.</span></li>';
+            } else {
+                recommendationsListEl.innerHTML = recs.map(r => `
+                    <li>
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <span>${escapeHtml(r)}</span>
+                    </li>
+                `).join('');
+            }
+        }
+
+        // 5. Card 4: Pontos Fortes
+        const strengthsListEl = document.getElementById('insight-strengths-list');
+        if (strengthsListEl) {
+            const strengths = insights.pontos_fortes || [];
+            if (strengths.length === 0) {
+                strengthsListEl.innerHTML = '<li><i class="fa-solid fa-star"></i> <span>Engajamento contínuo nas atividades acadêmicas.</span></li>';
+            } else {
+                strengthsListEl.innerHTML = strengths.map(s => `
+                    <li>
+                        <i class="fa-solid fa-star"></i>
+                        <span>${escapeHtml(s)}</span>
+                    </li>
+                `).join('');
+            }
+        }
     }
 
 });
